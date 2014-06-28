@@ -3,6 +3,7 @@ class "Level" {
   height = 17;
   world = nil;
   ship = nil;
+  shots = nil;
   wall = {};
 }
 
@@ -20,6 +21,7 @@ function Level:__init(tileWidth, tileHeight)
   love.physics.setMeter(64)
   self.world = love.physics.newWorld(0, 9.81 * 64, true)
   self.ship = Ship:new(self)
+  self.shots = Shots:new(self)
 
 	--Add block physics
 	self.physics = {}
@@ -78,6 +80,7 @@ function Level:draw()
   end
 
   self.ship:draw()
+  self.shots:draw()
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -150,6 +153,7 @@ function Level:update(dt)
   end
 
   self.ship:update(dt)
+  self.shots:update(dt)
 end
 
 function Level:checkNotBlocked()

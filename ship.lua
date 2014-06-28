@@ -24,11 +24,14 @@ function Ship:update(dt)
 	elseif love.keyboard.isDown("d") then
 		self.body:applyForce(2000, 0)
 	end
+	if love.keyboard.isDown(" ") then
+		self.parent.shots:add(self.x, self.y)
+	end
 
 	self.x, self.y = self.body:getPosition()
 end
 
 function Ship:draw()
 	G.setColor(255, 255, 255)
-	G.rectangle("fill", self.x, self.y, 32, 32)
+	G.rectangle("fill", self.x + 16, self.y + 16, 32, 32)
 end
