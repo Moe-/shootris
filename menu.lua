@@ -1,3 +1,4 @@
+require ('parallax')
 MENU_START = 0
 MENU_CREDITS = 1
 MENU_QUIT = 2
@@ -11,6 +12,7 @@ class "Menu" {
 	color_hover = {255, 127, 0, 255};
 	quad = nil;
 	background = nil;
+	par = nil;
 }
 
 function Menu:__init(parent)
@@ -20,10 +22,11 @@ function Menu:__init(parent)
 	self.quad = G.newQuad(0, 0, W.getWidth(), W.getHeight(), 256, 256)
 	self.background = G.newImage("gfx/space.png")
 	self.background:setWrap("repeat", "repeat")
+	self.par = Parallax:new(10)
 end
 
-function Menu:update()
-	
+function Menu:update(dt)
+	self.par:update(dt)
 end
 
 function Menu:draw()
@@ -32,6 +35,7 @@ function Menu:draw()
 
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, W.getWidth(), W.getHeight())
 	G.draw(self.background, self.quad)
+	self.par:draw()
 	--MENU START
 	self:setColor(MENU_START)
 	G.rectangle("fill", W.getWidth() * 0.5 - 128, 240 + 0, 256, 42)
