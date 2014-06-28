@@ -49,10 +49,12 @@ function Level:draw()
     for x = 1, self.width do
       local drawx = offsetx + (x-1) * self.tileWidth
       local drawy = offsety + (y-1) * self.tileHeight
-      if self.level[x][y] == 1 then
+      if self.level[x][y] == 0 then
+        love.graphics.setColor(0, 255, 0, 255)
+      elseif self.level[x][y] == 1 then
         love.graphics.setColor(255, 0, 0, 255)
       else
-        love.graphics.setColor(0, 255, 0, 255)
+        love.graphics.setColor(0, 0, 255, 255)
       end
       love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
     end
@@ -65,6 +67,39 @@ function Level:draw()
   self.ship:draw()
 end
 
+function Level:checkStoneCollision(offsetx, offsety)
+  local posx, posy = self.stone:getPosition()
+  for x = 1, self.stone:getWidth() do
+    for y = 1, self.stone:getHeight() do
+      if self.stone:getBlock(x, y) > 0 and self.level[posx + x + offsetx][posy + y + offsety] > 0 then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function Level:checkRowComplete()
+  for y = 1, self.height do
+    local rowComplete = true
+    for x = 1, self.width do
+      if self.level[x][y] == 0 then
+        rowComplete = false
+      end
+    end
+    if rowComplete then
+      for y2 = y, 2, -1 do
+        for x = 1, self.width do
+          self.level[x][y2] = self.level[x][y2 - 1]
+        end
+      end
+      for x = 1, self.width do
+        self.level[x][1] = 0
+      end
+    end
+  end
+end
+
 function Level:update(dt)
   self.world:update(dt)
 
@@ -73,7 +108,27 @@ function Level:update(dt)
   end
   
   if self.stone ~= nil then
-    self.stone:update(dt)
+    if self.stone:update(dt) then -- check collision
+      local collision = false
+      local posx, posy = self.stone:getPosition()
+      if posy + self.stone:getHeight() > self.height then
+        collision = true
+      else
+        collision = self:checkStoneCollision(0,0)
+      end
+      
+      if collision then
+        for x = 1, self.stone:getWidth() do
+          for y = 1, self.stone:getHeight() do
+            if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y - 1] == 0 then
+              self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
+            end
+          end
+        end
+        self.stone = nil
+        self:checkRowComplete()
+      end
+    end
   end
 
   self.ship:update(dt)
@@ -81,11 +136,12 @@ end
 
 function Level:keyHit(key)
   if self.stone ~= nil then
+    local posx, posy = self.stone:getPosition()
     if key == "down" then
       self.stone:fallDown()
-    elseif key == "left" then
+    elseif posx - 1 >= 0 and key == "left" and not self:checkStoneCollision(-1,0) then
       self.stone:moveLeft() 
-    elseif key == "right" then
+    elseif posx + 1 + self.stone:getWidth() <= self.width and key == "right" and not self:checkStoneCollision(1,0) then
       self.stone:moveRight()
     elseif key == "l" then
       self.stone:rotateRight()
