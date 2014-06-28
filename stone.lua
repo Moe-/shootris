@@ -1,15 +1,17 @@
 class "Stone" {
-  width = 4;
-  height = 4;
+  maxSize = 4;
   moveTime = 0.25;
   fallTime = 0.5;
   nextFall = 0.5;
   nextMove = 0;
+  quickFall = false;
 }
 
 function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
   self.posx = posx
   self.posy = posy
+  self.width = self.maxSize
+  self.height = self.maxSize
   self.fieldWidth = fieldWidth
   self.fieldHeight = fieldHeight
 
@@ -84,7 +86,7 @@ function Stone:update(dt)
     self.nextMove = self.nextMove - dt
   end
   
-  if self.nextFall > 0 then
+  if self.nextFall > 0 and not self.quickFall then
     self.nextFall = self.nextFall - dt
   else
     self.posy = self.posy + 1
@@ -154,7 +156,7 @@ function Stone:updateSize()
 end
 
 function Stone:fallDown()
-  
+  self.quickFall = true
 end
 
 function Stone:moveLeft()
@@ -172,11 +174,53 @@ function Stone:moveRight()
 end
 
 function Stone:rotateRight()
-  
+  if self.nextMove <= 0 then
+    local newStones = {}
+    for x = 1, self.height do
+      newStones[x] = {}
+      for y = 1, self.width do
+        newStones[x][y] = 0
+      end
+    end
+    
+    for y = 1, self.height do
+      for x = 1, self.width do
+        newStones[self.height - y + 1][x] = self.stones[x][y]
+      end
+    end
+    
+    local temp = self.width
+    self.width = self.height
+    self.height = temp
+    self.stones = newStones
+    
+    self.nextMove = self.moveTime
+  end
 end
 
 function Stone:rotateLeft()
-  
+  if self.nextMove <= 0 then
+    local newStones = {}
+    for x = 1, self.height do
+      newStones[x] = {}
+      for y = 1, self.width do
+        newStones[x][y] = 0
+      end
+    end
+    
+    for y = 1, self.height do
+      for x = 1, self.width do
+        newStones[y][self.width - x + 1] = self.stones[x][y]
+      end
+    end
+    
+    local temp = self.width
+    self.width = self.height
+    self.height = temp
+    self.stones = newStones
+    
+    self.nextMove = self.moveTime
+  end
 end
 
 function Stone:getWidth()

@@ -1,6 +1,9 @@
 class "Level" {
   width = 10;
   height = 17;
+  world = nil;
+  ship = nil;
+  wall = {};
 }
 
 function Level:__init(tileWidth, tileHeight)
@@ -14,6 +17,27 @@ function Level:__init(tileWidth, tileHeight)
   end
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
+  love.physics.setMeter(64)
+  self.world = love.physics.newWorld(0, 9.81 * 64, true)
+  self.ship = Ship:new(self)
+
+	--Add left wall
+	self.wall[1] = {}
+	self.wall[1].body = love.physics.newBody(self.world, 0, W.getHeight() * 0.5, "static")
+	self.wall[1].shape = love.physics.newRectangleShape(16, W.getHeight())
+	self.wall[1].fixture = love.physics.newFixture(self.wall[1].body, self.wall[1].shape, 1)
+
+	--Add right wall
+	self.wall[2] = {}
+	self.wall[2].body = love.physics.newBody(self.world, W.getWidth(), W.getHeight() * 0.5, "static")
+	self.wall[2].shape = love.physics.newRectangleShape(16, W.getHeight())
+	self.wall[2].fixture = love.physics.newFixture(self.wall[2].body, self.wall[2].shape, 1)
+
+	--Add bottom wall
+	self.wall[3] = {}
+	self.wall[3].body = love.physics.newBody(self.world, W.getWidth() * 0.5, W.getHeight(), "static")
+	self.wall[3].shape = love.physics.newRectangleShape(W.getWidth(), 16)
+	self.wall[3].fixture = love.physics.newFixture(self.wall[3].body, self.wall[3].shape, 1)
 end
 
 function Level:draw()
@@ -39,6 +63,8 @@ function Level:draw()
   if self.stone ~= nil then
     self.stone:draw(offsetx, offsety)
   end
+
+  self.ship:draw()
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -75,6 +101,8 @@ function Level:checkRowComplete()
 end
 
 function Level:update(dt)
+  self.world:update(dt)
+
   if self.stone == nil then
     self.stone = Stone:new(self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
   end
@@ -102,6 +130,21 @@ function Level:update(dt)
       end
     end
   end
+
+  self.ship:update(dt)
+end
+
+function Level:checkNotBlocked()
+  local size = math.max(self.stone:getWidth(), self.stone:getHeight())
+  local posx, posy = self.stone:getPosition()
+  for x = 1, size do
+    for y = 1, size do
+      if self.level[posx + x][posy + y] > 0 then
+        return false
+      end
+    end
+  end
+  return true
 end
 
 function Level:keyHit(key)
@@ -113,10 +156,12 @@ function Level:keyHit(key)
       self.stone:moveLeft() 
     elseif posx + 1 + self.stone:getWidth() <= self.width and key == "right" and not self:checkStoneCollision(1,0) then
       self.stone:moveRight()
-    elseif key == "l" then
+    elseif key == "l" and self:checkNotBlocked() then
       self.stone:rotateRight()
-    elseif key == "k" then
+    elseif key == "k" and self:checkNotBlocked() then
       self.stone:rotateLeft()
+	elseif key == "escape" then
+	  love.event.quit()
     end
   end
 end
