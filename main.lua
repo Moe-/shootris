@@ -3,6 +3,7 @@ require('game')
 require('menu')
 require('credits')
 require('level')
+require('sound')
 
 function love.load()
 	G = love.graphics
