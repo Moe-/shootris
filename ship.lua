@@ -19,15 +19,15 @@ end
 
 function Ship:update(dt)
 	if love.keyboard.isDown("w") then
-		self.body:applyForce(0, -5000)
+		self.body:applyForce(0, -2000)
 	end
 	if love.keyboard.isDown("a") then
-		self.body:applyForce(-2000, 0)
+		self.body:applyForce(-500, 0)
 	elseif love.keyboard.isDown("d") then
-		self.body:applyForce(2000, 0)
+		self.body:applyForce(500, 0)
 	end
 	if love.keyboard.isDown(" ") then
-		self.parent.shots:add(self.x + 16, self.y + 16)
+		self.parent.shots:add(self.x + 32, self.y + 32)
 	end
 
 	self.x, self.y = self.body:getPosition()
