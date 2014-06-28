@@ -52,7 +52,7 @@ end
 
 function Menu:enter()
 	if self.cursor == MENU_START then
-		self.parent:setState(STATE_MENU)
+		self.parent:setState(STATE_GAME)
 	elseif self.cursor == MENU_CREDITS then
 		self.parent:setState(STATE_CREDITS)
 	elseif self.cursor == MENU_QUIT then
