@@ -37,6 +37,19 @@ function Level:__init(tileWidth, tileHeight)
 		end
 	end
 
+	--Add movable block physics
+	self.move_physics = {}
+	for x = 1, self.width do
+		self.move_physics[x] = {}
+		for y = 1, self.height do
+			self.move_physics[x][y] = {}
+			self.move_physics[x][y].body = love.physics.newBody(self.world, 0, 0, "static")
+			self.move_physics[x][y].shape = love.physics.newRectangleShape(self.tileWidth, self.tileHeight)
+			self.move_physics[x][y].fixture = love.physics.newFixture(self.move_physics[x][y].body, self.move_physics[x][y].shape, 1)
+			self.move_physics[x][y].body:setActive(false)
+		end
+	end
+
 	--Add left wall
 	self.wall[1] = {}
 	self.wall[1].body = love.physics.newBody(self.world, 0, W.getHeight() * 0.5, "static")
@@ -54,6 +67,12 @@ function Level:__init(tileWidth, tileHeight)
 	self.wall[3].body = love.physics.newBody(self.world, W.getWidth() * 0.5, W.getHeight(), "static")
 	self.wall[3].shape = love.physics.newRectangleShape(W.getWidth(), 16)
 	self.wall[3].fixture = love.physics.newFixture(self.wall[3].body, self.wall[3].shape, 1)
+
+	--Add top wall
+	self.wall[4] = {}
+	self.wall[4].body = love.physics.newBody(self.world, W.getWidth() * 0.5, -16, "static")
+	self.wall[4].shape = love.physics.newRectangleShape(W.getWidth(), 16)
+	self.wall[4].fixture = love.physics.newFixture(self.wall[4].body, self.wall[4].shape, 1)
 end
 
 function Level:draw()
@@ -121,7 +140,7 @@ function Level:update(dt)
   self.world:update(dt)
 
   if self.stone == nil then
-    self.stone = Stone:new(self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
+    self.stone = Stone:new(self, self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
   end
 
   if self.stone ~= nil then

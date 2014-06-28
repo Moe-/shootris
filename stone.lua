@@ -1,4 +1,5 @@
 class "Stone" {
+  parent = nil;
   maxSize = 4;
   moveTime = 0.25;
   fallTime = 0.5;
@@ -7,9 +8,11 @@ class "Stone" {
   quickFall = false;
   shipHitPerSec = 0.33;
   shotHit = 0.2;
+  physics = {};
 }
 
-function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
+function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
+  self.parent = parent
   self.posx = posx
   self.posy = posy
   self.width = self.maxSize
@@ -24,6 +27,7 @@ function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight
       self.stones[x][y] = math.random(0, 1)
     end
   end
+
   local stonetype = math.random(1,7)
   if stonetype == 1 then --T
     self.stones[2][2] = 2
@@ -64,13 +68,24 @@ function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
   
+  for y = 1, self.height do
+    for x = 1, self.width do
+	  if self.stones[x][y] == 0 then
+        self.parent.move_physics[x][y].body:setActive(false)
+	  else
+	    self.parent.move_physics[x][y].body:setActive(true)
+	  end
+    end
+  end
+
   self:updateSize()
 end
 
 function Stone:draw(offsetx, offsety)
   for y = 1, self.height do
     for x = 1, self.width do
-      if self.stones[x][y] == 0 then
+      self.parent.move_physics[x][y].body:setPosition(offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
+	  if self.stones[x][y] == 0 then
         -- do nothing, it's empty
       elseif math.ceil(self.stones[x][y]) == 1 then
         love.graphics.setColor(128, 0, 128, 128)

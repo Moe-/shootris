@@ -23,7 +23,7 @@ function Shots:draw()
 end
 
 function Shots:add(x, y)
-	if self.timer + 0.1 < T.getTime() then
+	if self.timer + 0.2 < T.getTime() then
 		self.shots[#self.shots + 1] = {}
 		self.shots[#self.shots].x = x
 		self.shots[#self.shots].y = y
