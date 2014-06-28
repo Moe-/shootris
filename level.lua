@@ -178,8 +178,7 @@ function Level:update(dt)
   for i = 1, self.shots:getSize() do
     local posx, posy = self.shots:getShotCoords(i)
     
-    print((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2)
-    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2 - 0.5)
+    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
     posy = math.floor(posy / self.tileHeight)
     
     self:shoot(posx, posy)
