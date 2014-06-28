@@ -10,7 +10,7 @@ class "Game" {
 function Game:__init()
 	self.stateObject[STATE_MENU] = Menu:new(self)
 	self.stateObject[STATE_CREDITS] = Credits:new(self)
-	self.stateObject[STATE_GAME] = Level:new(self)
+	self.stateObject[STATE_GAME] = Level:new(64, 64)
 end
 
 function Game:update(dt)

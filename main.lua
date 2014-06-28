@@ -1,6 +1,7 @@
 require('lib/postshader')
 
 require('utils')
+require('stone')
 require('game')
 require('menu')
 require('credits')
@@ -11,12 +12,13 @@ function love.load()
 	G = love.graphics
 	W = love.window
 	T = love.timer
+	math.randomseed(os.time())
 
 	game = Game:new()
 end
 
 function love.update(dt)
-	game:update()
+	game:update(dt)
 end
 
 function love.draw()
@@ -24,5 +26,8 @@ function love.draw()
 end
 
 function love.keypressed(key, unicode)
+  if key == "escape" then
+      love.event.quit()
+  end
 	game:keyHit(key)
 end
