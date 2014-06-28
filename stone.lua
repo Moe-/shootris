@@ -306,7 +306,12 @@ function Stone:shoot(x, y)
     return
   end
 
-  local hit = self.shotHit
+  local factor = 1
+  if math.ceil(self.stones[x][y]) == 2 then
+    factor = 0.075
+  end
+  local hit = factor * self.shotHit
+  
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
     self:updateSize()

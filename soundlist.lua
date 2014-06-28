@@ -3,6 +3,7 @@ class "Soundlist" {}
 music = {
 	----example:
 	-- music1 = love.audio.newSource("music.ogg")
+	music_main = love.audio.newSource("audio/music_main.ogg")
 	--, -- next file here
 }
 
