@@ -35,16 +35,32 @@ function Level:draw()
   end
   
   if self.stone ~= nil then
-    self.stone:draw()
+    self.stone:draw(offsetx, offsety)
   end
 end
 
 function Level:update(dt)
   if self.stone == nil then
-    self.stone = Stone:new(love.graphics.getWidth()/2, self.tileHeight, self.tileWidth, self.tileHeight)
+    self.stone = Stone:new(self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
   end
   
   if self.stone ~= nil then
     self.stone:update(dt)
+  end
+end
+
+function Level:keyHit(key)
+  if self.stone ~= nil then
+    if key == "down" then
+      self.stone:fallDown()
+    elseif key == "left" then
+      self.stone:moveLeft() 
+    elseif key == "right" then
+      self.stone:moveRight()
+    elseif key == "l" then
+      self.stone:rotateRight()
+    elseif key == "k" then
+      self.stone:rotateLeft()
+    end
   end
 end
