@@ -19,8 +19,8 @@ function Level:__init(tileWidth, tileHeight)
   end
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
-  love.physics.setMeter(64)
-  self.world = love.physics.newWorld(0, 9.81 * 64, true)
+  love.physics.setMeter(128)
+  self.world = love.physics.newWorld(0, 9.81 * 128, true)
   self.ship = Ship:new(self)
   self.shots = Shots:new(self)
 
@@ -52,13 +52,13 @@ function Level:__init(tileWidth, tileHeight)
 
 	--Add left wall
 	self.wall[1] = {}
-	self.wall[1].body = love.physics.newBody(self.world, 0, W.getHeight() * 0.5, "static")
+	self.wall[1].body = love.physics.newBody(self.world, 328, W.getHeight() * 0.5, "static")
 	self.wall[1].shape = love.physics.newRectangleShape(16, W.getHeight())
 	self.wall[1].fixture = love.physics.newFixture(self.wall[1].body, self.wall[1].shape, 1)
 
 	--Add right wall
 	self.wall[2] = {}
-	self.wall[2].body = love.physics.newBody(self.world, W.getWidth(), W.getHeight() * 0.5, "static")
+	self.wall[2].body = love.physics.newBody(self.world, W.getWidth() - 392, W.getHeight() * 0.5, "static")
 	self.wall[2].shape = love.physics.newRectangleShape(16, W.getHeight())
 	self.wall[2].fixture = love.physics.newFixture(self.wall[2].body, self.wall[2].shape, 1)
 
