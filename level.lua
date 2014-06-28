@@ -2,6 +2,7 @@ class "Level" {
   width = 10;
   height = 17;
   shipHitPerSec = 0.33;
+  shotHit = 0.2;
   world = nil;
   ship = nil;
   shots = nil;
@@ -268,7 +269,11 @@ function Level:shoot(x, y)
     return
   end
 
-  local hit = self.shipHitPerSec
+  local factor = 1
+  if math.ceil(self.level[x][y]) == 2 then
+    factor = 0.075
+  end
+  local hit = factor * self.shotHit
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
   else
