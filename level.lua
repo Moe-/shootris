@@ -175,6 +175,23 @@ function Level:update(dt)
   self.ship:update(dt)
   self.shots:update(dt)
   
+  for i = 1, self.shots:getSize() do
+    local posx, posy = self.shots:getShotCoords(i)
+    
+    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
+    posy = math.floor(posy / self.tileHeight)
+    
+    self:shoot(posx, posy)
+    
+    if self.stone ~= nil then
+      local stonex, stoney = self.stone:getPosition()
+      self.stone:shoot(posx - stonex, posy - stoney)
+    end
+  end
+  
+  if self.stone ~= nil and self.stone:isDead() then
+    self.stone = nil
+  end
   --self:sitOnStone(3, 15, dt)
   --self:shoot(3, 15)
 end

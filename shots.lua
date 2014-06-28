@@ -30,3 +30,14 @@ function Shots:add(x, y)
 		self.timer = T.getTime()
 	end
 end
+
+function Shots:getSize()
+	return #self.shots
+end
+
+function Shots:getShotCoords(number)
+	if number < 1 or number > #self.shots then
+		return -1, -1
+	end
+	return self.shots[number].x, self.shots[number].y
+end

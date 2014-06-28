@@ -116,8 +116,17 @@ function Stone:update(dt)
   return false
 end
 
+function Stone:isDead()
+  if self.width == 0 or self.height == 0 then
+    return true
+  end
+  return false
+end
+
 function Stone:updateSizeInternal()
   local blank = true
+  
+  if self.width == 0 or self.height == 0 then return end
   for x = 1, self.width do
     if self.stones[x][1] > 0 then
       blank = false
@@ -132,6 +141,7 @@ function Stone:updateSizeInternal()
     self.height = self.height - 1
   end
   
+  if self.width == 0 or self.height == 0 then return end
   blank = true
   for x = 1, self.width do
     if self.stones[x][self.height] > 0 then
@@ -142,6 +152,7 @@ function Stone:updateSizeInternal()
     self.height = self.height - 1
   end
   
+  if self.width == 0 or self.height == 0 then return end
   blank = true
   for y = 1, self.height do
     if self.stones[1][y] > 0 then
@@ -157,6 +168,7 @@ function Stone:updateSizeInternal()
     self.width = self.width - 1
   end
   
+  if self.width == 0 or self.height == 0 then return end
   blank = true
   for y = 1, self.height do
     if self.stones[self.width][y] > 0 then
