@@ -3,12 +3,14 @@ class "Ship" {
 	body = nil;
 	shape = nil;
 	fixture = nil;
-	x = 32;
-	y = 32;
+	x = 0;
+	y = 0;
 }
 
 function Ship:__init(parent)
 	self.parent = parent
+	self.x = G.getWidth() * 0.5
+	self.y = G.getHeight() - 256
 	self.body = love.physics.newBody(parent.world, self.x, self.y, "dynamic")
 	self.shape = love.physics.newRectangleShape(32, 32)
 	self.fixture = love.physics.newFixture(self.body, self.shape, 20)
@@ -25,7 +27,7 @@ function Ship:update(dt)
 		self.body:applyForce(2000, 0)
 	end
 	if love.keyboard.isDown(" ") then
-		self.parent.shots:add(self.x, self.y)
+		self.parent.shots:add(self.x + 16, self.y + 16)
 	end
 
 	self.x, self.y = self.body:getPosition()
