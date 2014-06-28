@@ -139,6 +139,7 @@ function Stone:updateSizeInternal()
       end
     end
     self.height = self.height - 1
+    self.posy = self.posy + 1
   end
   
   if self.width == 0 or self.height == 0 then return end
@@ -166,6 +167,7 @@ function Stone:updateSizeInternal()
       end
     end
     self.width = self.width - 1
+    self.posx = self.posx + 1
   end
   
   if self.width == 0 or self.height == 0 then return end
