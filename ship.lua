@@ -16,15 +16,15 @@ function Ship:__init(parent)
 end
 
 function Ship:update(dt)
-	if love.keyboard.isDown("up") then
+	if love.keyboard.isDown("w") then
 		self.body:applyForce(0, -5000)
 	end
-	if love.keyboard.isDown("left") then
+	if love.keyboard.isDown("a") then
 		self.body:applyForce(-2000, 0)
-	elseif love.keyboard.isDown("right") then
+	elseif love.keyboard.isDown("d") then
 		self.body:applyForce(2000, 0)
 	end
-print(self.body:getPosition())
+
 	self.x, self.y = self.body:getPosition()
 end
 

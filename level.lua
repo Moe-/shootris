@@ -135,6 +135,11 @@ function Level:update(dt)
           for y = 1, self.stone:getHeight() do
             if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y - 1] == 0 then
               self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
+				if self.level[posx + x][posy + y - 1] == 0 then
+					self.physics[posx + x][posy + y - 1].body:setActive(false)
+				else
+					self.physics[posx + x][posy + y - 1].body:setActive(true)
+				end
             end
           end
         end
