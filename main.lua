@@ -1,3 +1,5 @@
+require('lib/postshader')
+
 require('utils')
 require('stone')
 require('game')
@@ -8,8 +10,10 @@ require('sound')
 
 function love.load()
 	G = love.graphics
-  
-  math.randomseed(os.time())
+	W = love.window
+	T = love.timer
+	math.randomseed(os.time())
+
 	game = Game:new()
 end
 
