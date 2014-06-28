@@ -104,6 +104,19 @@ function Level:update(dt)
   end
 end
 
+function Level:checkNotBlocked()
+  local size = math.max(self.stone:getWidth(), self.stone:getHeight())
+  local posx, posy = self.stone:getPosition()
+  for x = 1, size do
+    for y = 1, size do
+      if self.level[posx + x][posy + y] > 0 then
+        return false
+      end
+    end
+  end
+  return true
+end
+
 function Level:keyHit(key)
   if self.stone ~= nil then
     local posx, posy = self.stone:getPosition()
@@ -113,10 +126,10 @@ function Level:keyHit(key)
       self.stone:moveLeft() 
     elseif posx + 1 + self.stone:getWidth() <= self.width and key == "right" and not self:checkStoneCollision(1,0) then
       self.stone:moveRight()
-    elseif key == "l" then
-      self.stone:rotateRight()
-    elseif key == "k" then
-      self.stone:rotateLeft()
+    elseif key == "l" and self:checkNotBlocked() then
+      self.stone:rotateRight(false)
+    elseif key == "k" and self:checkNotBlocked() then
+      self.stone:rotateLeft(false)
     end
   end
 end
