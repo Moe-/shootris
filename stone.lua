@@ -5,6 +5,8 @@ class "Stone" {
   nextFall = 0.5;
   nextMove = 0;
   quickFall = false;
+  shipHitPerSec = 0.33;
+  shotHit = 0.2;
 }
 
 function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
@@ -70,10 +72,10 @@ function Stone:draw(offsetx, offsety)
     for x = 1, self.width do
       if self.stones[x][y] == 0 then
         -- do nothing, it's empty
-      elseif self.stones[x][y] == 1 then
+      elseif math.ceil(self.stones[x][y]) == 1 then
         love.graphics.setColor(128, 0, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
-      else
+      elseif math.ceil(self.stones[x][y]) == 2 then
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
       end
@@ -85,6 +87,9 @@ function Stone:update(dt)
   if self.nextMove > 0 then
     self.nextMove = self.nextMove - dt
   end
+  
+  --self:shoot(3, 3)
+  --self:sitOnStone(2,2,dt)
   
   if self.nextFall > 0 and not self.quickFall then
     self.nextFall = self.nextFall - dt
@@ -138,7 +143,7 @@ function Stone:updateSizeInternal()
   end
   
   blank = true
-  for y = 1, self.width do
+  for y = 1, self.height do
     if self.stones[self.width][y] > 0 then
       blank = false
     end
@@ -237,4 +242,48 @@ end
 
 function Stone:getPosition()
   return self.posx, self.posy
+end
+
+function Stone:sitOnStone(x, y, dt)
+  if x < 1 or x > self.width then
+    return
+  end
+  
+  if y < 1 or y > self.height then
+    return
+  end
+  
+  if self.stones[x][y] == 0 then
+    return
+  end
+
+  local hit = dt * self.shipHitPerSec
+  if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
+    self.stones[x][y] = 0
+    self:updateSize()
+  else
+    self.stones[x][y] = self.stones[x][y] - hit
+  end
+end
+
+function Stone:shoot(x, y)
+  if x < 1 or x > self.width then
+    return
+  end
+  
+  if y < 1 or y > self.height then
+    return
+  end
+  
+  if self.stones[x][y] == 0 then
+    return
+  end
+
+  local hit = self.shotHit
+  if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
+    self.stones[x][y] = 0
+    self:updateSize()
+  else
+    self.stones[x][y] = self.stones[x][y] - hit
+  end
 end
