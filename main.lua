@@ -2,6 +2,7 @@ require('lib/postshader')
 
 require('utils')
 require('stone')
+require('ship')
 require('game')
 require('menu')
 require('credits')
@@ -26,8 +27,5 @@ function love.draw()
 end
 
 function love.keypressed(key, unicode)
-  if key == "escape" then
-      love.event.quit()
-  end
 	game:keyHit(key)
 end
