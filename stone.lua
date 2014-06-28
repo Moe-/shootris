@@ -65,13 +65,14 @@ function Stone:draw(offsetx, offsety)
   for y = 1, self.height do
     for x = 1, self.width do
       if self.stones[x][y] == 0 then
-        love.graphics.setColor(128, 128, 0, 128)
+        -- do nothing, it's empty
       elseif self.stones[x][y] == 1 then
         love.graphics.setColor(128, 0, 128, 128)
+        love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
       else
         love.graphics.setColor(0, 128, 128, 128)
+        love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
       end
-      love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
     end
   end
 end
@@ -86,7 +87,9 @@ function Stone:update(dt)
   else
     self.posy = self.posy + 1
     self.nextFall = self.nextFall + self.fallTime
+    return true
   end
+  return false
 end
 
 function Stone:fallDown()
@@ -113,4 +116,20 @@ end
 
 function Stone:rotateLeft()
   
+end
+
+function Stone:getWidth()
+  return self.width
+end
+
+function Stone:getHeight()
+  return self.height
+end
+
+function Stone:getBlock(x, y)
+  return self.stones[x][y]
+end
+
+function Stone:getPosition()
+  return self.posx, self.posy
 end

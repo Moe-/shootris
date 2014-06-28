@@ -25,10 +25,12 @@ function Level:draw()
     for x = 1, self.width do
       local drawx = offsetx + (x-1) * self.tileWidth
       local drawy = offsety + (y-1) * self.tileHeight
-      if self.level[x][y] == 1 then
+      if self.level[x][y] == 0 then
+        love.graphics.setColor(0, 255, 0, 255)
+      elseif self.level[x][y] == 1 then
         love.graphics.setColor(255, 0, 0, 255)
       else
-        love.graphics.setColor(0, 255, 0, 255)
+        love.graphics.setColor(0, 0, 255, 255)
       end
       love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
     end
@@ -45,7 +47,32 @@ function Level:update(dt)
   end
   
   if self.stone ~= nil then
-    self.stone:update(dt)
+    if self.stone:update(dt) then -- check collision
+      local collision = false
+      local posx, posy = self.stone:getPosition()
+      if posy + self.stone:getHeight() > self.height then
+        collision = true
+      else
+        for x = 1, self.stone:getWidth() do
+          for y = 1, self.stone:getHeight() do
+            if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y] > 0 then
+              collision = true
+            end
+          end
+        end
+      end
+      
+      if collision then
+        for x = 1, self.stone:getWidth() do
+          for y = 1, self.stone:getHeight() do
+            if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y - 1] == 0 then
+              self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
+            end
+          end
+        end
+        self.stone = nil
+      end
+    end
   end
 end
 
