@@ -21,6 +21,19 @@ function Level:__init(tileWidth, tileHeight)
   self.world = love.physics.newWorld(0, 9.81 * 64, true)
   self.ship = Ship:new(self)
 
+	--Add block physics
+	self.physics = {}
+	for x = 1, self.width do
+		self.physics[x] = {}
+		for y = 1, self.height do
+			self.physics[x][y] = {}
+			self.physics[x][y].body = love.physics.newBody(self.world, W.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth + (x - 1) * self.tileWidth, (y - 1) * self.tileHeight, "static")
+			self.physics[x][y].shape = love.physics.newRectangleShape(self.tileWidth, self.tileHeight)
+			self.physics[x][y].fixture = love.physics.newFixture(self.physics[x][y].body, self.physics[x][y].shape, 1)
+			self.physics[x][y].body:setActive(false)
+		end
+	end
+
 	--Add left wall
 	self.wall[1] = {}
 	self.wall[1].body = love.physics.newBody(self.world, 0, W.getHeight() * 0.5, "static")
@@ -106,7 +119,7 @@ function Level:update(dt)
   if self.stone == nil then
     self.stone = Stone:new(self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
   end
-  
+
   if self.stone ~= nil then
     if self.stone:update(dt) then -- check collision
       local collision = false
@@ -116,7 +129,7 @@ function Level:update(dt)
       else
         collision = self:checkStoneCollision(0,0)
       end
-      
+
       if collision then
         for x = 1, self.stone:getWidth() do
           for y = 1, self.stone:getHeight() do
