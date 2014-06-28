@@ -1,6 +1,7 @@
 class "Level" {
   width = 10;
   height = 17;
+  shipHitPerSec = 0.33;
   world = nil;
   ship = nil;
   shots = nil;
@@ -66,9 +67,9 @@ function Level:draw()
       local drawy = offsety + (y-1) * self.tileHeight
       if self.level[x][y] == 0 then
         love.graphics.setColor(0, 255, 0, 255)
-      elseif self.level[x][y] == 1 then
+      elseif math.ceil(self.level[x][y]) == 1 then
         love.graphics.setColor(255, 0, 0, 255)
-      else
+      elseif math.ceil(self.level[x][y]) == 2 then
         love.graphics.setColor(0, 0, 255, 255)
       end
       love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
@@ -154,11 +155,20 @@ function Level:update(dt)
 
   self.ship:update(dt)
   self.shots:update(dt)
+  
+  --self:sitOnStone(3, 15, dt)
+  --self:shoot(3, 15)
 end
 
 function Level:checkNotBlocked()
   local size = math.max(self.stone:getWidth(), self.stone:getHeight())
   local posx, posy = self.stone:getPosition()
+  
+  if posx + size > self.width or posy + size > self.height then
+    return false
+  end
+  
+  
   for x = 1, size do
     for y = 1, size do
       if self.level[posx + x][posy + y] > 0 then
@@ -185,5 +195,47 @@ function Level:keyHit(key)
 	elseif key == "escape" then
 	  love.event.quit()
     end
+  end
+end
+
+function Level:sitOnStone(x, y, dt)
+  if x < 1 or x > self.width then
+    return
+  end
+  
+  if y < 1 or y > self.height then
+    return
+  end
+
+  if self.level[x][y] == 0 then
+    return
+  end
+
+  local hit = dt * self.shipHitPerSec
+  if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
+    self.level[x][y] = 0
+  else
+    self.level[x][y] = self.level[x][y] - hit
+  end
+end
+
+function Level:shoot(x, y)
+  if x < 1 or x > self.width then
+    return
+  end
+  
+  if y < 1 or y > self.height then
+    return
+  end
+
+  if self.level[x][y] == 0 then
+    return
+  end
+
+  local hit = self.shipHitPerSec
+  if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
+    self.level[x][y] = 0
+  else
+    self.level[x][y] = self.level[x][y] - hit
   end
 end
