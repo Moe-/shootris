@@ -2,6 +2,7 @@ require('utils')
 require('game')
 require('menu')
 require('credits')
+require('level')
 
 function love.load()
 	G = love.graphics
