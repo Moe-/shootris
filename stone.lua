@@ -21,37 +21,37 @@ function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight
     end
   end
   local stonetype = math.random(1,7)
-  if stonetype == 1 then
+  if stonetype == 1 then --T
     self.stones[2][2] = 2
     self.stones[3][1] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
-  elseif stonetype == 2 then
+  elseif stonetype == 2 then --inverse L
     self.stones[2][3] = 2
     self.stones[3][1] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
-  elseif stonetype == 3 then
+  elseif stonetype == 3 then --L
     self.stones[2][1] = 2
     self.stones[3][1] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
-  elseif stonetype == 4 then
+  elseif stonetype == 4 then--I
     self.stones[3][1] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
     self.stones[3][4] = 2
-  elseif stonetype == 5 then
+  elseif stonetype == 5 then--o
     self.stones[2][2] = 2
     self.stones[2][3] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
-  elseif stonetype == 6 then
+  elseif stonetype == 6 then--inverse z
     self.stones[2][3] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
     self.stones[4][2] = 2
-  elseif stonetype == 7 then
+  elseif stonetype == 7 then--z
     self.stones[2][2] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
@@ -59,6 +59,8 @@ function Stone:__init(posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight
   end
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
+  
+  self:updateSize()
 end
 
 function Stone:draw(offsetx, offsety)
@@ -90,6 +92,65 @@ function Stone:update(dt)
     return true
   end
   return false
+end
+
+function Stone:updateSizeInternal()
+  local blank = true
+  for x = 1, self.width do
+    if self.stones[x][1] > 0 then
+      blank = false
+    end
+  end
+  if blank then
+    for y = 2, self.height do
+      for x = 1, self.width do
+        self.stones[x][y-1] = self.stones[x][y]
+      end
+    end
+    self.height = self.height - 1
+  end
+  
+  blank = true
+  for x = 1, self.width do
+    if self.stones[x][self.height] > 0 then
+      blank = false
+    end
+  end
+  if blank then
+    self.height = self.height - 1
+  end
+  
+  blank = true
+  for y = 1, self.height do
+    if self.stones[1][y] > 0 then
+      blank = false
+    end
+  end
+  if blank then
+    for y = 1, self.height do
+      for x = 2, self.width do
+        self.stones[x-1][y] = self.stones[x][y]
+      end
+    end
+    self.width = self.width - 1
+  end
+  
+  blank = true
+  for y = 1, self.width do
+    if self.stones[self.width][y] > 0 then
+      blank = false
+    end
+  end
+  if blank then
+    self.width = self.width - 1
+  end
+end
+
+function Stone:updateSize()
+  local repeatCount = math.max(self.width, self.height)
+  for i = 1, repeatCount do
+    self:updateSizeInternal()
+  end
 end
 
 function Stone:fallDown()

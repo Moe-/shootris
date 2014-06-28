@@ -41,6 +41,39 @@ function Level:draw()
   end
 end
 
+function Level:checkStoneCollision(offsetx, offsety)
+  local posx, posy = self.stone:getPosition()
+  for x = 1, self.stone:getWidth() do
+    for y = 1, self.stone:getHeight() do
+      if self.stone:getBlock(x, y) > 0 and self.level[posx + x + offsetx][posy + y + offsety] > 0 then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+function Level:checkRowComplete()
+  for y = 1, self.height do
+    local rowComplete = true
+    for x = 1, self.width do
+      if self.level[x][y] == 0 then
+        rowComplete = false
+      end
+    end
+    if rowComplete then
+      for y2 = y, 2, -1 do
+        for x = 1, self.width do
+          self.level[x][y2] = self.level[x][y2 - 1]
+        end
+      end
+      for x = 1, self.width do
+        self.level[x][1] = 0
+      end
+    end
+  end
+end
+
 function Level:update(dt)
   if self.stone == nil then
     self.stone = Stone:new(self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
@@ -53,13 +86,7 @@ function Level:update(dt)
       if posy + self.stone:getHeight() > self.height then
         collision = true
       else
-        for x = 1, self.stone:getWidth() do
-          for y = 1, self.stone:getHeight() do
-            if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y] > 0 then
-              collision = true
-            end
-          end
-        end
+        collision = self:checkStoneCollision(0,0)
       end
       
       if collision then
@@ -71,6 +98,7 @@ function Level:update(dt)
           end
         end
         self.stone = nil
+        self:checkRowComplete()
       end
     end
   end
@@ -78,11 +106,12 @@ end
 
 function Level:keyHit(key)
   if self.stone ~= nil then
+    local posx, posy = self.stone:getPosition()
     if key == "down" then
       self.stone:fallDown()
-    elseif key == "left" then
+    elseif posx - 1 >= 0 and key == "left" and not self:checkStoneCollision(-1,0) then
       self.stone:moveLeft() 
-    elseif key == "right" then
+    elseif posx + 1 + self.stone:getWidth() <= self.width and key == "right" and not self:checkStoneCollision(1,0) then
       self.stone:moveRight()
     elseif key == "l" then
       self.stone:rotateRight()
