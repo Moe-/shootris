@@ -158,12 +158,13 @@ function Level:update(dt)
           for y = 1, self.stone:getHeight() do
             if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y - 1] == 0 then
               self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
-				if self.level[posx + x][posy + y - 1] == 0 then
-					self.physics[posx + x][posy + y - 1].body:setActive(false)
-				else
-					self.physics[posx + x][posy + y - 1].body:setActive(true)
-				end
             end
+
+			if self.level[posx + x][posy + y - 1] == 0 then
+				self.physics[posx + x][posy + y - 1].body:setActive(false)
+			else
+				self.physics[posx + x][posy + y - 1].body:setActive(true)
+			end
           end
         end
         self.stone = nil
@@ -271,6 +272,7 @@ function Level:shoot(x, y)
   local hit = self.shipHitPerSec
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
+	self.physics[x][y].body:setActive(false)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
