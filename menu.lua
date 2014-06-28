@@ -34,21 +34,21 @@ function Menu:draw()
 	G.draw(self.background, self.quad)
 	--MENU START
 	self:setColor(MENU_START)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, 240 + 0, 256, 42)
+	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 0, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Start", W.getWidth() * 0.5 - 128, 240 + 0, 256, "center")
+	G.printf("Start", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 0, 256, "center")
 
 	--MENU CREDITS
 	self:setColor(MENU_CREDITS)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, 240 + 48, 256, 42)
+	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 48, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Credits", W.getWidth() * 0.5 - 128, 240 + 48, 256, "center")
+	G.printf("Credits", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 48, 256, "center")
 
 	--MENU QUIT
 	self:setColor(MENU_QUIT)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, 240 + 96, 256, 42)
+	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 96, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Quit", W.getWidth() * 0.5 - 128, 240 + 96, 256, "center")
+	G.printf("Quit", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 96, 256, "center")
 
 	--love.postshader.addEffect("chromatic", 0, 0, 0, 1, -1, 0)
 	love.postshader.addEffect("scanlines")
@@ -63,6 +63,8 @@ function Menu:keyHit(key)
 		self:down()
 	elseif key == "return" then
 		self:enter()
+	elseif key == "escape" then
+		love.event.quit()
 	end
 end
 
