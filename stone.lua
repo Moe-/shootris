@@ -3,12 +3,13 @@ class "Stone" {
   maxSize = 4;
   moveTime = 0.25;
   fallTime = 0.5;
-  nextFall = 0.5;
+  nextFall = 5.0;
   nextMove = 0;
   quickFall = false;
   shipHitPerSec = 0.667;
   shotHit = 0.2;
   physics = {};
+  particle = nil;
 }
 
 function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
@@ -127,6 +128,7 @@ function Stone:update(dt)
     self.nextFall = self.nextFall - dt
   else
     self.posy = self.posy + 1
+    self:translateParticle(0, self.tileHeight)
     self.nextFall = self.nextFall + self.fallTime
     return true
   end
@@ -214,6 +216,7 @@ function Stone:moveLeft()
   if self.nextMove <= 0 and self.posx - 1 >= 0 then
     self.posx = self.posx - 1
     self.nextMove = self.moveTime
+    self:translateParticle(-self.tileWidth, 0)
   end
 end
 
@@ -221,6 +224,7 @@ function Stone:moveRight()
   if self.nextMove <= 0 and self.posx + self.width < self.fieldWidth then
     self.posx = self.posx + 1
     self.nextMove = self.moveTime
+    self:translateParticle(self.tileWidth, 0)
   end
 end
 
@@ -340,4 +344,16 @@ function Stone:shoot(x, y)
     self.stones[x][y] = self.stones[x][y] - hit
   end
   return true
+end
+
+function Stone:setParticle(p)
+  self.particle = p
+end
+
+function Stone:translateParticle(x, y)
+  if self.particle ~= nil and self.particle:isActive() then
+    self.particle:translate(x, y)
+  else
+    self.particle = nil
+  end
 end

@@ -1,15 +1,23 @@
+require('particle')
+
 class "Level" {
   width = 10;
   height = 17;
   shipHitPerSec = 0.667;
   shotHit = 0.2;
+  particles = {};
+  particleSystemCount = 15;
 }
 
 function Level:__init(tileWidth, tileHeight)
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
+  for i = 1, self.particleSystemCount do
+    self.particles[i] = Particle:new(50,50)
+  end
   self:reset()
   self:setup()
+  
 end
 
 function Level:reset()
@@ -20,6 +28,10 @@ function Level:reset()
   self.lastVelocity = 0
   self.gameLost = false
   self.shipLost = false
+  for i = 1, self.particleSystemCount do
+    self.particles[i]:reset()
+    self.particles[i]:stop()
+  end
 end
 
 function Level:setup()
@@ -156,6 +168,10 @@ function Level:draw()
     love.graphics.setColor(255, 255, 0, 255)
     love.graphics.print("Press enter to restart.", 10, 400)
   end
+  
+  for i = 1, self.particleSystemCount do
+    self.particles[i]:draw()
+  end
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -193,9 +209,12 @@ end
 
 function Level:update(dt)
   self.world:update(dt)
+  for i = 1, self.particleSystemCount do
+    self.particles[i]:update(dt)
+  end
 
   if self.stone == nil then
-    self.stone = Stone:new(self, self.width/2 - 1, 0, self.tileWidth, self.tileHeight, self.width, self.height)
+    self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height)
     if not self:checkNotBlocked() then
       self.gameLost = true
     end
@@ -243,19 +262,32 @@ function Level:update(dt)
   self.shots:update(dt)
   
   for i = 1, self.shots:getSize() do
-    local posx, posy = self.shots:getShotCoords(i)
+    local px, py = self.shots:getShotCoords(i)
     
-    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
-    posy = math.floor(posy / self.tileHeight)
+    local posx = math.floor((px - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
+    local posy = math.floor(py / self.tileHeight)
     
     local shotHit = self:shoot(posx, posy)
     
+    local bindStone = false
     if not shotHit and self.stone ~= nil then
       local stonex, stoney = self.stone:getPosition()
       shotHit = shotHit or self.stone:shoot(posx - stonex, posy - stoney)
+      bindStone = true
     end
     
     if shotHit then
+      for i = 1, self.particleSystemCount do
+        if not self.particles[i]:isActive() then
+          self.particles[i]:setPosition(px, posy * self.tileHeight)
+          self.particles[i]:reset()
+          if bindStone then
+            self.stone:setParticle(self.particles[i])
+          end
+          break
+        end
+    end
+      
       self.shots:removeShot(i)
     end
   end
