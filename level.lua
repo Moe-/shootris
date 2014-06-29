@@ -27,7 +27,7 @@ function Level:setup()
   self.stone = nil
 
   --stone blocks
-  self.stone_quad = G.newQuad(0, 0, tileWidth, tileHeight, 192, 192)
+  self.stone_quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.stone_img = G.newImage("gfx/blocks.png")
   self.stone_batch = G.newSpriteBatch(self.stone_img, 16)
   self.stone_batch:setColor(255, 255, 255, 0)
@@ -41,7 +41,7 @@ function Level:setup()
   self.stone_batch:unbind()
 
   -- level blocks
-  self.quad = G.newQuad(0, 0, tileWidth, tileHeight, 192, 192)
+  self.quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
   self.batch = G.newSpriteBatch(self.img, 171)
   self.batch:setColor(255, 255, 255, 0)
