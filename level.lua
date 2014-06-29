@@ -13,12 +13,21 @@ class "Level" {
 function Level:__init(tileWidth, tileHeight)
   self.level = {}
   self.stone = nil
+  self.quad = G.newQuad(0, 0, 64, 64, 192, 192)
+  self.img = G.newImage("gfx/blocks.png")
+  self.batch = G.newSpriteBatch(self.img, 170)
+  self.batch:setColor(255, 255, 255, 0)
+
+  self.batch:bind()
   for x = 1, self.width do
     self.level[x] = {}
     for y = 1, self.height do
       self.level[x][y] = 0 --math.random(0, 1)
+	  self.batch:add(self.quad, (x - 1) * tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * tileWidth, (y - 1) * tileHeight)
     end
   end
+  self.batch:unbind()
+
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
   love.physics.setMeter(128)
@@ -100,6 +109,8 @@ function Level:draw()
   if self.stone ~= nil then
     self.stone:draw(offsetx, offsety)
   end
+  G.setColor(255, 255, 255)
+  G.draw(self.batch)
 
   self.ship:draw()
   self.shots:draw()
@@ -145,6 +156,7 @@ function Level:update(dt)
     self.stone = Stone:new(self, self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
   end
 
+  self.batch:bind()
   if self.stone ~= nil then
     if self.stone:update(dt) then -- check collision
       local collision = false
@@ -162,11 +174,17 @@ function Level:update(dt)
               self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
             end
 
+			--update physics
 			if self.level[posx + x][posy + y - 1] == 0 then
 				self.physics[posx + x][posy + y - 1].body:setActive(false)
+				self.batch:setColor(255, 255, 255, 0)
 			else
 				self.physics[posx + x][posy + y - 1].body:setActive(true)
+				self.batch:setColor(255, 255, 255, 255)
 			end
+
+			--update graphics
+			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
           end
         end
         self.stone = nil
@@ -174,6 +192,7 @@ function Level:update(dt)
       end
     end
   end
+  self.batch:unbind()
 
   self.ship:update(dt)
   self.shots:update(dt)
