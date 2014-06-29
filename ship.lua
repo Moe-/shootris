@@ -5,6 +5,7 @@ class "Ship" {
 	fixture = nil;
 	x = 0;
 	y = 0;
+	timer = 0;
 }
 
 function Ship:__init(parent)
@@ -12,11 +13,13 @@ function Ship:__init(parent)
 	self.x = G.getWidth() * 0.5
 	self.y = G.getHeight() - 256
 	self.body = love.physics.newBody(parent.world, self.x, self.y, "dynamic")
+	self.body:setFixedRotation(true)
 	self.shape = love.physics.newRectangleShape(64, 128)
 	self.fixture = love.physics.newFixture(self.body, self.shape, 20)
 	self.fixture:setRestitution(0.2)
 	self.quad = G.newQuad(0, 0, 64, 128, 320, 256)
 	self.img = G.newImage("gfx/ship.png")
+	self.timer = T.getTime()
 end
 
 function Ship:update(dt)
@@ -29,7 +32,10 @@ function Ship:update(dt)
 		self.body:applyForce(10000, 0)
 	end
 	if love.keyboard.isDown(" ") then
-		self.parent.shots:add(self.x + 32, self.y + 32)
+		if self.timer + 0.2 < T.getTime() then
+			self.parent.shots:add(self.x + 32, self.y)
+			self.timer = T.getTime()
+		end
 	end
 
 	self.x, self.y = self.body:getPosition()
@@ -37,7 +43,14 @@ end
 
 function Ship:draw()
 	G.setColor(255, 255, 255)
-	G.draw(self.img, self.quad, self.x + 16, self.y + 16)
+	local x, y = self.body:getLinearVelocity()
+	if self.timer + 0.05 < T.getTime() then
+		y = 0
+	else
+		y = 1
+	end
+	self.quad:setViewport((math.min(4, math.max(0, math.floor(x / 50) + 2))) * 64, y * 128, 64, 128)
+	G.draw(self.img, self.quad, self.x, self.y - 32)
 end
 
 function Ship:getPosition()

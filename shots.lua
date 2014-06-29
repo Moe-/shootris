@@ -2,12 +2,11 @@ class "Shots" {
 	parent = nil;
 	shots = {};
   toRemove = {};
-	timer = 0;
 }
 
 function Shots:__init(parent)
 	self.parent = parent
-	self.timer = T.getTime()
+	self.img = G.newImage("gfx/shot.png")
 end
 
 function Shots:update(dt)
@@ -25,18 +24,15 @@ end
 
 function Shots:draw()
 	for n = 1, #self.shots do
-		G.setColor(0, 127, 255)
-		G.rectangle("fill", self.shots[n].x, self.shots[n].y, 8, 8)
+		G.setColor(255, 255, 255)
+		G.draw(self.img, self.shots[n].x - 16, self.shots[n].y - 16)
 	end
 end
 
 function Shots:add(x, y)
-	if self.timer + 0.2 < T.getTime() then
-		self.shots[#self.shots + 1] = {}
-		self.shots[#self.shots].x = x
-		self.shots[#self.shots].y = y
-		self.timer = T.getTime()
-	end
+	self.shots[#self.shots + 1] = {}
+	self.shots[#self.shots].x = x
+	self.shots[#self.shots].y = y
 end
 
 function Shots:getSize()
