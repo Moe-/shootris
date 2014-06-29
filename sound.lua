@@ -23,7 +23,7 @@ function Sound:playMusic(musicName, volume)
 		m:setVolume(volume)
 		m:play()
   else
-    print("No such file")
+    print("No such music file")
 	end
 end
 
@@ -43,7 +43,7 @@ end
 
 function Sound:stopMusic(musicName)
 	if musicName == "all" then
-		for _,v in ipairs(self.soundlist:getMusicList()) do
+		for _,v in ipairs(self.soundlist.music) do
 			self:stopMusic(v)
 		end
 	else
@@ -68,6 +68,8 @@ function Sound:playSound(sound, volume, xCoord, yCoord, zCoord)
 		s:setVolume(volume)
 		s:setPosition(xCoord or 0,yCoord or 0,zCoord or 0)
 		s:play()
+  else
+    print("No such sound file")
 	end
 end
 
@@ -87,7 +89,7 @@ end
 
 function Sound:stopSound(soundName)
 	if soundName == "all" then
-		for _,v in ipairs(sList.soundEffects) do
+		for _,v in ipairs(self.soundlist.soundEffects) do
 			self:stopSound(v)
 		end
 	else

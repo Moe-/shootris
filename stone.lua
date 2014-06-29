@@ -250,6 +250,7 @@ function Stone:rotateRight()
     self.stones = newStones
     
     self.nextMove = self.moveTime
+    gSound:playSound("cube_rotate", 100, love.graphics.getWidth()/2, self.posy * self.tileHeight, 0)
   end
 end
 
@@ -275,6 +276,7 @@ function Stone:rotateLeft()
     self.stones = newStones
     
     self.nextMove = self.moveTime
+    gSound:playSound("cube_rotate", 100, love.graphics.getWidth()/2, self.posy * self.tileHeight, 0)
   end
 end
 

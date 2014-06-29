@@ -25,7 +25,7 @@ function Soundlist:__init()
     cube_hit_c3 = love.audio.newSource("audio/cube_hit_c3.wav", "static"),
     cube_hit_c4 = love.audio.newSource("audio/cube_hit_c4.wav", "static"),
     cube_hit_d2 = love.audio.newSource("audio/cube_hit_d2.wav", "static"),
-    cube_hit_d2 = love.audio.newSource("audio/cube_hit_d3.wav", "static"),
+    cube_hit_d3 = love.audio.newSource("audio/cube_hit_d3.wav", "static"),
     cube_hit_d4 = love.audio.newSource("audio/cube_hit_d4.wav", "static"),
     cube_hit_e2 = love.audio.newSource("audio/cube_hit_e2.wav", "static"),
     cube_hit_e3 = love.audio.newSource("audio/cube_hit_e3.wav", "static"),
@@ -41,16 +41,9 @@ function Soundlist:__init()
 end
 
 function Soundlist:getMusic(name)
-  for i,v in pairs(self.music) do
-    print(i, v)
-  end
 	return self.music[name]
 end
 
 function Soundlist:getSound(name)
 	return self.soundEffects[name]
-end
-
-function Soundlist:getMusicList()
-  return self.music
 end

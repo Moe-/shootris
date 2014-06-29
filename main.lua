@@ -17,7 +17,6 @@ function love.load()
 	math.randomseed(os.time())
   gSound = Sound:new()
   gSound:playMusic("music_main", 100)
-
 	game = Game:new()
 end
 
