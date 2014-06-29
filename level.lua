@@ -37,9 +37,25 @@ end
 function Level:setup()
   self.level = {}
   self.stone = nil
-  self.quad = G.newQuad(0, 0, 64, 64, 192, 192)
+
+  --stone blocks
+  self.stone_quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
+  self.stone_img = G.newImage("gfx/blocks.png")
+  self.stone_batch = G.newSpriteBatch(self.stone_img, 16)
+  self.stone_batch:setColor(255, 255, 255, 0)
+
+  self.stone_batch:bind()
+  for x = 1, self.width do
+    for y = 1, self.height do
+	  self.stone_batch:add(self.stone_quad, 0, 0)
+    end
+  end
+  self.stone_batch:unbind()
+
+  -- level blocks
+  self.quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
-  self.batch = G.newSpriteBatch(self.img, 170)
+  self.batch = G.newSpriteBatch(self.img, 171)
   self.batch:setColor(255, 255, 255, 0)
 
   self.batch:bind()
@@ -363,6 +379,8 @@ function Level:sitOnStone(x, y, dt)
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
     self.physics[x][y].body:setActive(false)
+	self.batch:setColor(255, 255, 255, 0)
+	self.batch:set(x * self.height + y)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
