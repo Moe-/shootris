@@ -2,7 +2,7 @@ require('particle')
 
 class "Level" {
   width = 10;
-  height = 16;
+  height = 17;
   shipHitPerSec = 0.667;
   shotHit = 0.2;
   particles = {};
@@ -367,6 +367,15 @@ function Level:update(dt)
   end
   --self:sitOnStone(3, 15, dt)
   --self:shoot(3, 15)
+  
+  for y = 1, self.height do
+    local string = ""
+    for x = 1, self.width do 
+      string = string .. self.level[x][y] .. " "
+    end
+    print(string)
+  end
+  print(" ")
 end
 
 function Level:checkNotBlocked()
