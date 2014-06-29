@@ -13,7 +13,7 @@ class "Stone" {
   stonetype = 0;
 }
 
-function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
+function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight, fallTime, initFallTime)
   self.parent = parent
   self.posx = posx
   self.posy = posy
@@ -21,6 +21,8 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
   self.height = self.maxSize
   self.fieldWidth = fieldWidth
   self.fieldHeight = fieldHeight
+  self.fallTime = fallTime
+  self.nextFall = initFallTime
 
   self.stones = {}
   for x = 1, self.width do
@@ -317,6 +319,7 @@ function Stone:sitOnStone(x, y, dt)
     self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
     gSound:playSound("cube_hit_e3", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.parent.points = self.parent.points + 100
   else
     self.stones[x][y] = self.stones[x][y] - hit
   end
@@ -346,6 +349,7 @@ function Stone:shoot(x, y)
     self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
     gSound:playSound("cube_hit_e2", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.parent.points = self.parent.points + 100
   else
     self.stones[x][y] = self.stones[x][y] - hit
   end

@@ -2,11 +2,12 @@ require('particle')
 
 class "Level" {
   width = 10;
-  height = 17;
+  height = 16;
   shipHitPerSec = 0.667;
   shotHit = 0.2;
   particles = {};
   particleSystemCount = 15;
+  points = 0;
 }
 
 function Level:__init(tileWidth, tileHeight)
@@ -133,7 +134,7 @@ function Level:draw()
   local width = gScreenWidth
   local height = gScreenHeight
   local offsetx = width / 2 - self.width/2 * self.tileWidth
-  local offsety = 0
+  local offsety = height - self.height * self.tileHeight
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.plx, self.quad)
 	G.draw(self.bg, offsetx, offsety)
@@ -177,6 +178,10 @@ function Level:draw()
     love.graphics.print("Press enter to restart.", 64, 320)
   end
   
+  love.graphics.setColor(255, 0, 255, 255)
+  love.graphics.print("Points: " .. self.points, 10, 500)
+  love.graphics.print("Level: " .. math.floor(1 + self.points / 10000), 10, 600)
+  
   for i = 1, self.particleSystemCount do
     self.particles[i]:draw()
   end
@@ -217,12 +222,16 @@ function Level:checkRowComplete()
   end
   if count == 1 then
     gSound:playSound("row_clear_1", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 500
   elseif count == 2 then
     gSound:playSound("row_clear_2", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 1250
   elseif count == 3 then
     gSound:playSound("row_clear_3", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 1850
   elseif count == 4 then
     gSound:playSound("row_clear_4", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 3000
   end
 end
 
@@ -233,7 +242,8 @@ function Level:update(dt)
   end
 
   if self.stone == nil then
-    self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height)
+    local factor = 1 + self.points / 10000
+    self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height, 1.0 * factor, 7.5 * factor)
     if not self:checkNotBlocked() then
       self.gameLost = true
     else
@@ -300,6 +310,7 @@ function Level:update(dt)
     end
     
     if shotHit then
+      self.points = self.points + 50
       for i = 1, self.particleSystemCount do
         if not self.particles[i]:isActive() then
           self.particles[i]:setPosition(px, posy * self.tileHeight)
@@ -419,6 +430,7 @@ function Level:sitOnStone(x, y, dt)
     self.batch:setColor(255, 255, 255, 0)
     self.batch:set(x * self.height + y)
     gSound:playSound("cube_hit_d4", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 100
   else
     self.level[x][y] = self.level[x][y] - hit
   end
@@ -446,6 +458,7 @@ function Level:shoot(x, y)
     self.level[x][y] = 0
     self.physics[x][y].body:setActive(false)
     gSound:playSound("cube_hit_d3", 100, gScreenWidth/2, gScreenHeight, 0)
+    self.points = self.points + 200
 
 	--update graphics
 	self.batch:setColor(255, 255, 255, 0)
