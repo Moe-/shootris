@@ -248,7 +248,7 @@ function Level:update(dt)
 			end
 
 			--update graphics
-			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
+			self.batch:set((posx + x - 1) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
           end
         end
         self.stone = nil
