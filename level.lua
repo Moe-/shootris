@@ -256,14 +256,14 @@ function Level:update(dt)
 				self.physics[posx + x][posy + y - 1].body:setActive(false)
 				self.batch:setColor(255, 255, 255, 0)
 			else
-				local stone_id = self.level[posx + x][posy + y - 1]
+				local stone_id = math.ceil(self.level[posx + x][posy + y - 1])
 				self.physics[posx + x][posy + y - 1].body:setActive(true)
 				self.batch:setColor(255, 255, 255, 255)
 				self.quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
 			end
 
 			--update graphics
-			self.batch:set((posx + x - 1) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
+			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
           end
         end
         self.stone = nil
