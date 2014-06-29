@@ -168,3 +168,8 @@ love.postshader.refreshScreenSize = function()
 	LOVE_POSTSHADER_BUFFER_RENDER = love.graphics.newCanvas()
 	LOVE_POSTSHADER_BUFFER_BACK = love.graphics.newCanvas()
 end
+
+love.postshader.setScreenSize = function(width, height)
+	LOVE_POSTSHADER_BUFFER_RENDER = love.graphics.newCanvas(width, height)
+	LOVE_POSTSHADER_BUFFER_BACK = love.graphics.newCanvas(width, height)
+end
