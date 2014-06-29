@@ -13,9 +13,25 @@ class "Level" {
 function Level:__init(tileWidth, tileHeight)
   self.level = {}
   self.stone = nil
-  self.quad = G.newQuad(0, 0, 64, 64, 192, 192)
+
+  --stone blocks
+  self.stone_quad = G.newQuad(0, 0, tileWidth, tileHeight, 192, 192)
+  self.stone_img = G.newImage("gfx/blocks.png")
+  self.stone_batch = G.newSpriteBatch(self.stone_img, 16)
+  self.stone_batch:setColor(255, 255, 255, 0)
+
+  self.stone_batch:bind()
+  for x = 1, self.width do
+    for y = 1, self.height do
+	  self.stone_batch:add(self.stone_quad, 0, 0)
+    end
+  end
+  self.stone_batch:unbind()
+
+  -- level blocks
+  self.quad = G.newQuad(0, 0, tileWidth, tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
-  self.batch = G.newSpriteBatch(self.img, 170)
+  self.batch = G.newSpriteBatch(self.img, 171)
   self.batch:setColor(255, 255, 255, 0)
 
   self.batch:bind()
