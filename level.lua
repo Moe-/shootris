@@ -7,6 +7,7 @@ class "Level" {
   ship = nil;
   shots = nil;
   wall = {};
+  lastVelocity = 0;
 }
 
 function Level:__init(tileWidth, tileHeight)
@@ -194,6 +195,24 @@ function Level:update(dt)
   if self.stone ~= nil and self.stone:isDead() then
     self.stone = nil
   end
+
+  if self.ship ~= nil then
+    local velocity = self.ship:getVelocityLength()
+    
+    if velocity == 0 and self.lastVelocity == 0 then
+      local posx, posy = self.ship:getPosition()
+      posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2 + 0.5) + 1
+      posy = math.ceil(posy / self.tileHeight) + 1
+      
+      self:sitOnStone(posx, posy, dt)
+      if self.stone ~= nil then
+        local stonex, stoney = self.stone:getPosition()
+        self.stone:sitOnStone(posx - stonex, posy - stoney, dt)
+      end
+    end
+    
+    self.lastVelocity = velocity
+  end
   --self:sitOnStone(3, 15, dt)
   --self:shoot(3, 15)
 end
@@ -252,6 +271,7 @@ function Level:sitOnStone(x, y, dt)
   local hit = dt * self.shipHitPerSec
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
+    self.physics[x][y].body:setActive(false)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
@@ -277,7 +297,7 @@ function Level:shoot(x, y)
   local hit = factor * self.shotHit
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
-	self.physics[x][y].body:setActive(false)
+    self.physics[x][y].body:setActive(false)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
