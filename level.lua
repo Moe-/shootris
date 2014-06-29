@@ -303,7 +303,7 @@ function Level:update(dt)
         end
       end
       
-      local sound = math.random(1, 9)
+      local sound = math.random(1, 15)
       if sound == 1 then
         gSound:playSound("cube_hit_a2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
       elseif sound == 2 then
@@ -314,14 +314,6 @@ function Level:update(dt)
         gSound:playSound("cube_hit_c4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
       elseif sound == 5 then
         gSound:playSound("cube_hit_d2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
-      elseif sound == 6 then
-        gSound:playSound("cube_hit_d3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
-      elseif sound == 7 then
-        gSound:playSound("cube_hit_d4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
-      elseif sound == 8 then
-        gSound:playSound("cube_hit_e2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
-      elseif sound == 9 then
-        gSound:playSound("cube_hit_e3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
       end 
       
       self.shots:removeShot(i)
@@ -339,10 +331,10 @@ function Level:update(dt)
     posy = math.ceil(posy / self.tileHeight) + 1
     
     if velocity == 0 and self.lastVelocity == 0 then
-      self:sitOnStone(posx, posy, dt)
+      self:sitOnStone(posx, posy + 1, dt)
       if self.stone ~= nil then
         local stonex, stoney = self.stone:getPosition()
-        self.stone:sitOnStone(posx - stonex, posy - stoney, dt)
+        self.stone:sitOnStone(posx - stonex, posy - stoney + 1, dt)
       end
     end
     self.lastVelocity = velocity
@@ -416,8 +408,9 @@ function Level:sitOnStone(x, y, dt)
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
     self.physics[x][y].body:setActive(false)
-	self.batch:setColor(255, 255, 255, 0)
-	self.batch:set(x * self.height + y)
+    self.batch:setColor(255, 255, 255, 0)
+    self.batch:set(x * self.height + y)
+    gSound:playSound("cube_hit_d4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
@@ -443,7 +436,8 @@ function Level:shoot(x, y)
   local hit = factor * self.shotHit
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
-	self.physics[x][y].body:setActive(false)
+    self.physics[x][y].body:setActive(false)
+    gSound:playSound("cube_hit_d3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
 
 	--update graphics
 	self.batch:setColor(255, 255, 255, 0)

@@ -316,6 +316,7 @@ function Stone:sitOnStone(x, y, dt)
     self.stones[x][y] = 0
     self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
+    gSound:playSound("cube_hit_e3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
   else
     self.stones[x][y] = self.stones[x][y] - hit
   end
@@ -344,6 +345,7 @@ function Stone:shoot(x, y)
     self.stones[x][y] = 0
     self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
+    gSound:playSound("cube_hit_e2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
   else
     self.stones[x][y] = self.stones[x][y] - hit
   end
