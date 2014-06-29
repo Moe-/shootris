@@ -8,33 +8,30 @@ class "Menu" {
 	cursor = 0;
 	cursor_max = 2;
 	font = nil;
-	color_normal = {0, 127, 255, 31};
+	color_normal = {0, 127, 255, 127};
 	color_hover = {255, 127, 0, 255};
 	quad = nil;
 	background = nil;
-	par = nil;
+	--par = nil;
 }
 
 function Menu:__init(parent)
 	self.parent = parent
 	self.cursor = 0
 	self.font = G.newFont(36)
-	self.quad = G.newQuad(0, 0, gScreenWidth, gScreenHeight, 256, 256)
-	self.background = G.newImage("gfx/space.png")
-	self.background:setWrap("repeat", "repeat")
-	self.par = Parallax:new(10)
+	self.background = G.newImage("gfx/titlescreen.png")
+	--self.par = Parallax:new(10)
 end
 
 function Menu:update(dt)
-	self.par:update(dt)
+	--self.par:update(dt)
 end
 
 function Menu:draw()
 	G.setFont(self.font)
 
-	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.background, self.quad)
-	self.par:draw()
+	--self.par:draw()
 	--MENU START
 	self:setColor(MENU_START)
 	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 0, 256, 42)

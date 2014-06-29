@@ -13,7 +13,7 @@ function Level:__init(tileWidth, tileHeight)
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
   for i = 1, self.particleSystemCount do
-    self.particles[i] = Particle:new(50,50)
+    self.particles[i] = Particle:new(50, 50)
   end
   self:reset()
   self:setup()
@@ -59,7 +59,7 @@ function Level:setup()
   -- level blocks
   self.quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
-  self.batch = G.newSpriteBatch(self.img, (self.width+1) * (self.height+1))
+  self.batch = G.newSpriteBatch(self.img, (self.width + 1) * (self.height + 1))
   self.batch:setColor(255, 255, 255, 0)
 
   self.batch:bind()
@@ -145,10 +145,11 @@ function Level:draw()
         love.graphics.setColor(0, 255, 0, 255)
       elseif math.ceil(self.level[x][y]) == 1 then
         love.graphics.setColor(255, 0, 0, 255)
+		love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
       elseif math.ceil(self.level[x][y]) >= 2 then
         love.graphics.setColor(0, 0, 255, 255)
+		love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
       end
-      --love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
     end
   end
   
@@ -385,12 +386,12 @@ function Level:keyHit(key)
       self.stone:moveLeft() 
     elseif posx + 1 + self.stone:getWidth() <= self.width and key == "right" and not self:checkStoneCollision(1,0) then
       self.stone:moveRight()
-    elseif key == "l" and self:checkNotBlocked() then
+    elseif (key == "l" or key == "up") and self:checkNotBlocked() then
       self.stone:rotateRight()
     elseif key == "k" and self:checkNotBlocked() then
       self.stone:rotateLeft()
     elseif key == "escape" then
-      love.event.quit()
+      game:setState(STATE_MENU)
     elseif key == "return" and (self.gameLost == true or self.shipLost == true) then
         self:reset()
         self:setup()
