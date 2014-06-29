@@ -12,6 +12,7 @@ require('sound')
 
 gScreenWidth = 1920
 gScreenHeight = 1080
+gFullscreen = false
 
 function love.load()
 	G = love.graphics
@@ -44,4 +45,8 @@ end
 
 function love.keypressed(key, unicode)
 	game:keyHit(key)
+  if key == "f12" then
+    gFullscreen = not gFullscreen
+    love.window.setFullscreen(gFullscreen)
+  end
 end
