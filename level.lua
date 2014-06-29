@@ -314,6 +314,7 @@ function Level:update(dt)
     if posx > 0 and posx < self.width then
       if (posy > self.height or self.level[posx][posy] > 0) and self.level[posx][posy - 1] > 0 then
         self.shipLost = true
+        self.ship:kill()
       end
     end
   end
