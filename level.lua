@@ -49,6 +49,14 @@ function Level:setup()
 	self.plx = G.newImage("gfx/space.png")
 	self.plx:setWrap("repeat", "repeat")
 
+  for x = 1, self.width + 1 do
+    self.level[x] = {}
+    for y = 1, self.height do
+      self.level[x][y] = 0 --math.random(0, 1)
+    end
+  end
+ 
+  -- moving block
   self.stone_batch:bind()
   for x = 1, self.width do
     for y = 1, self.height do
@@ -60,14 +68,12 @@ function Level:setup()
   -- level blocks
   self.quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
-  self.batch = G.newSpriteBatch(self.img, (self.width + 1) * (self.height + 1))
+  self.batch = G.newSpriteBatch(self.img, (self.width + 1) * (self.height))
   self.batch:setColor(255, 255, 255, 0)
 
   self.batch:bind()
-  for x = 1, self.width + 1 do
-    self.level[x] = {}
+  for x = 1, self.width do
     for y = 1, self.height do
-      self.level[x][y] = 0 --math.random(0, 1)
 	  self.batch:add(self.quad, (x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
     end
   end
@@ -165,7 +171,7 @@ function Level:draw()
 		end
 
 		--update graphics
-		self.batch:set(x * self.height + y, self.quad, (x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
+		self.batch:set((x-1) * self.height + (y-1), self.quad, (x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight - 8)
   
     end
   end
