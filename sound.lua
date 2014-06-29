@@ -63,12 +63,15 @@ function Sound:changeMusicVolume(musicName,newVolume)
 end
 --------------- sound effects
 -- sound effect functions: play, pause(+all), resume, stop(+all)
-function Sound:playSound(sound, volume, xCoord, yCoord, zCoord)
+function Sound:playSound(sound, volume, xCoord, yCoord, zCoord, forceRewind)
 	local s = self.soundlist:getSound(sound)
 	if s then
 		s:setVolume(volume)
 		s:setPosition(xCoord or 0,yCoord or 0,zCoord or 0)
 		s:play()
+    if forceRewind then
+      s:rewind()
+    end
   else
     print("No such sound file")
 	end
