@@ -25,7 +25,7 @@ function Credits:draw()
 
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.background, self.quad)
-	G.printf("Aldo Brießmann (Code) \nMarcus Ihde (Code) \nMarkus Vill (Code)\nMichael Klier (Sound)\nThomas Wellmann (Graphics)", gScreenWidth * 0.5 - 512, 320, 1024, "center")
+	G.printf("Aldo Brießmann (Code) \nMarcus Ihde (Code) \nMarkus Vill (Code)\nMichael Klier (Sound)\nPhilipp Kapusta (Music)\nThomas Wellmann (Graphics)", gScreenWidth * 0.5 - 512, 320, 1024, "center")
 end
 
 function Credits:keyHit(key)
