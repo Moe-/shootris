@@ -3,14 +3,26 @@ class "Level" {
   height = 17;
   shipHitPerSec = 0.33;
   shotHit = 0.2;
-  world = nil;
-  ship = nil;
-  shots = nil;
-  wall = {};
-  lastVelocity = 0;
 }
 
 function Level:__init(tileWidth, tileHeight)
+  self.tileWidth = tileWidth
+  self.tileHeight = tileHeight
+  self:reset()
+  self:setup()
+end
+
+function Level:reset()
+  self.world = nil
+  self.ship = nil
+  self.shots = nil
+  self.wall = {}
+  self.lastVelocity = 0
+  self.gameLost = false
+  self.shipLost = false
+end
+
+function Level:setup()
   self.level = {}
   self.stone = nil
   self.quad = G.newQuad(0, 0, 64, 64, 192, 192)
@@ -23,13 +35,12 @@ function Level:__init(tileWidth, tileHeight)
     self.level[x] = {}
     for y = 1, self.height do
       self.level[x][y] = 0 --math.random(0, 1)
-	  self.batch:add(self.quad, (x - 1) * tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * tileWidth, (y - 1) * tileHeight)
+	  self.batch:add(self.quad, (x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
     end
   end
   self.batch:unbind()
 
-  self.tileWidth = tileWidth
-  self.tileHeight = tileHeight
+  
   love.physics.setMeter(128)
   self.world = love.physics.newWorld(0, 9.81 * 128, true)
   self.ship = Ship:new(self)
@@ -114,6 +125,21 @@ function Level:draw()
 
   self.ship:draw()
   self.shots:draw()
+  
+  if self.gameLost then
+    love.graphics.setColor(0, 255, 0, 255)
+    love.graphics.print("The block player sucks.", 10, 200)
+  end
+  
+  if self.shipLost then
+    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.print("The ship player sucks.", 10, 300)
+  end
+  
+  if self.gameLost or self.shipLost then
+    love.graphics.setColor(255, 255, 0, 255)
+    love.graphics.print("Press enter to restart.", 10, 400)
+  end
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -153,7 +179,10 @@ function Level:update(dt)
   self.world:update(dt)
 
   if self.stone == nil then
-    self.stone = Stone:new(self, self.width/2 - 1, 1, self.tileWidth, self.tileHeight, self.width, self.height)
+    self.stone = Stone:new(self, self.width/2 - 1, 0, self.tileWidth, self.tileHeight, self.width, self.height)
+    if not self:checkNotBlocked() then
+      self.gameLost = true
+    end
   end
 
   self.batch:bind()
@@ -217,20 +246,23 @@ function Level:update(dt)
 
   if self.ship ~= nil then
     local velocity = self.ship:getVelocityLength()
+    local posx, posy = self.ship:getPosition()
+    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2 + 0.5) + 1
+    posy = math.ceil(posy / self.tileHeight) + 1
     
     if velocity == 0 and self.lastVelocity == 0 then
-      local posx, posy = self.ship:getPosition()
-      posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2 + 0.5) + 1
-      posy = math.ceil(posy / self.tileHeight) + 1
-      
       self:sitOnStone(posx, posy, dt)
       if self.stone ~= nil then
         local stonex, stoney = self.stone:getPosition()
         self.stone:sitOnStone(posx - stonex, posy - stoney, dt)
       end
     end
-    
     self.lastVelocity = velocity
+    
+    if (posy > self.height or self.level[posx][posy] > 0) and self.level[posx][posy - 1] > 0 then
+      self.shipLost = true
+    end
+    
   end
   --self:sitOnStone(3, 15, dt)
   --self:shoot(3, 15)
@@ -268,8 +300,11 @@ function Level:keyHit(key)
       self.stone:rotateRight()
     elseif key == "k" and self:checkNotBlocked() then
       self.stone:rotateLeft()
-	elseif key == "escape" then
-	  love.event.quit()
+    elseif key == "escape" then
+      love.event.quit()
+    elseif key == "return" and (self.gameLost == true or self.shipLost == true) then
+        self:reset()
+        self:setup()
     end
   end
 end
