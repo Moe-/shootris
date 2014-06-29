@@ -7,6 +7,7 @@ class "Ship" {
 	y = 0;
 	timer = 0;
 	dead = false;
+	boost = false;
 }
 
 function Ship:__init(parent)
@@ -20,6 +21,7 @@ function Ship:__init(parent)
 	self.fixture:setRestitution(0.2)
 	self.quad = G.newQuad(0, 0, 64, 128, 320, 256)
 	self.img = G.newImage("gfx/ship.png")
+	self.booster = G.newImage("gfx/booster.png")
 	self.timer = T.getTime()
 end
 
@@ -30,6 +32,9 @@ function Ship:update(dt)
 
 	if love.keyboard.isDown("w") then
 		self.body:applyForce(0, -20000)
+		boost = true;
+	else
+		boost = false;
 	end
 	if love.keyboard.isDown("a") then
 		self.body:applyForce(-10000, 0)
@@ -49,13 +54,15 @@ end
 function Ship:draw()
 	G.setColor(255, 255, 255)
 	local x, y = self.body:getLinearVelocity()
-	if self.timer + 0.05 < T.getTime() then
-		y = 0
-	else
-		y = 1
+	local shot = 0
+	if self.timer + 0.05 > T.getTime() then
+		shot = 1
 	end
-	self.quad:setViewport((math.min(4, math.max(0, math.floor(x / 50) + 2))) * 64, y * 128, 64, 128)
+	self.quad:setViewport((math.min(4, math.max(0, math.floor(x / 100) + 2))) * 64, shot * 128, 64, 128)
 	G.draw(self.img, self.quad, self.x, self.y - 32)
+	if boost then
+		G.draw(self.booster, self.x, self.y + 88)
+	end
 end
 
 function Ship:getPosition()
