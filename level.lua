@@ -1,7 +1,7 @@
 class "Level" {
   width = 10;
   height = 17;
-  shipHitPerSec = 0.33;
+  shipHitPerSec = 0.667;
   shotHit = 0.2;
 }
 
@@ -232,11 +232,15 @@ function Level:update(dt)
     posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
     posy = math.floor(posy / self.tileHeight)
     
-    self:shoot(posx, posy)
+    local shotHit = self:shoot(posx, posy)
     
-    if self.stone ~= nil then
+    if not shotHit and self.stone ~= nil then
       local stonex, stoney = self.stone:getPosition()
-      self.stone:shoot(posx - stonex, posy - stoney)
+      shotHit = shotHit or self.stone:shoot(posx - stonex, posy - stoney)
+    end
+    
+    if shotHit then
+      self.shots:removeShot(i)
     end
   end
   
@@ -259,10 +263,11 @@ function Level:update(dt)
     end
     self.lastVelocity = velocity
     
-    if (posy > self.height or self.level[posx][posy] > 0) and self.level[posx][posy - 1] > 0 then
-      self.shipLost = true
+    if posx > 0 and posx < self.width then
+      if (posy > self.height or self.level[posx][posy] > 0) and self.level[posx][posy - 1] > 0 then
+        self.shipLost = true
+      end
     end
-    
   end
   --self:sitOnStone(3, 15, dt)
   --self:shoot(3, 15)
@@ -333,15 +338,15 @@ end
 
 function Level:shoot(x, y)
   if x < 1 or x > self.width then
-    return
+    return false
   end
   
   if y < 1 or y > self.height then
-    return
+    return false
   end
 
   if self.level[x][y] == 0 then
-    return
+    return false
   end
 
   local factor = 1
@@ -359,4 +364,5 @@ function Level:shoot(x, y)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
+  return true
 end

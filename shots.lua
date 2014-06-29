@@ -1,6 +1,7 @@
 class "Shots" {
 	parent = nil;
 	shots = {};
+  toRemove = {};
 	timer = 0;
 }
 
@@ -10,6 +11,13 @@ function Shots:__init(parent)
 end
 
 function Shots:update(dt)
+  if #self.toRemove > 0 and #self.shots > 0 then
+    for i = 1, #self.toRemove do
+      table.remove(self.shots, self.toRemove[i])
+    end
+    self.toRemove = {}
+  end
+
 	for n = 1, #self.shots do
 		self.shots[n].y = self.shots[n].y - dt * 1000
 	end
@@ -40,4 +48,8 @@ function Shots:getShotCoords(number)
 		return -1, -1
 	end
 	return self.shots[number].x, self.shots[number].y
+end
+
+function Shots:removeShot(pos)
+	self.toRemove[#self.toRemove + 1] = pos
 end
