@@ -12,20 +12,20 @@ class "Upgrade" {
 	width = nil;
 	height = nil;
 	dtime = 0;
-	level = nil;
+	parent = nil;
 }
 
 function Upgrade:__init(level)
 	self.width = gScreenWidth
 	self.height = gScreenHeight
-	self.level = level
+	self.parent = level
 end
 
 function Upgrade:draw()
 	--draw blocks with icons on top
 	self.rectPosX1 = self.width - 96
 	self.rectPosY1 = self.height - 128
-	if self.level.points <= self.currentWeaponCosts then
+	if self.parent.points <= self.currentWeaponCosts then
 		love.graphics.setColor(180,100,100,255)
 	else
 		if self.mouseOnButton1 then
@@ -52,10 +52,11 @@ function Upgrade:update(dt)
 		end
 	end
 	if love.mouse.isDown("l") and self.mouseOnButton1 then
-		if self.level.points >= self.currentWeaponCosts then
-			self.level.points = self.level.points - self.currentWeaponCosts
+		if self.parent.points >= self.currentWeaponCosts then
+			self.parent.points = self.parent.points - self.currentWeaponCosts
 			self.currentWeaponCosts = self.weaponCosts*self.weaponLvl*self.weaponCostMultiplier
 			self.weaponLvl = self.weaponLvl + 1
+			self.parent.ship.hitStrength = 0.2*self.weaponLvl
 		end
 	end
 end

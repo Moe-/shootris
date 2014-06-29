@@ -8,6 +8,7 @@ class "Ship" {
 	timer = 0;
 	dead = false;
 	boost = false;
+	hitStrength = 0.2; -- fallback value
 }
 
 function Ship:__init(parent)
