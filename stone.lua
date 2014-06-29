@@ -94,16 +94,17 @@ function Stone:draw(offsetx, offsety)
       self.parent.move_physics[x][y].body:setPosition(offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
 	  if self.stones[x][y] == 0 then
         -- do nothing, it's empty
-		--self.parent.stone_batch:setViewport(0, 0, self.tileWidth, self.tileHeight)
 		self.parent.stone_batch:setColor(255, 255, 255, 0)
       elseif math.ceil(self.stones[x][y]) == 1 then
         love.graphics.setColor(128, 0, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
-        self.parent.stone_batch:setColor(255, 255, 255, 127)
+        self.parent.stone_batch:setColor(255, 255, 255, 255)
+		self.parent.stone_quad:setViewport(0, 0, self.tileWidth, self.tileHeight)
 	  elseif math.ceil(self.stones[x][y]) == 2 then
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
+		self.parent.stone_quad:setViewport(0, self.tileHeight, self.tileWidth, self.tileHeight)
 	  end
 
 	  self.parent.stone_batch:set((y - 1) * self.width + (x - 1), self.parent.stone_quad, offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)

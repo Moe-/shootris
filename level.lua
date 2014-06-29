@@ -347,6 +347,8 @@ function Level:sitOnStone(x, y, dt)
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
     self.physics[x][y].body:setActive(false)
+	self.batch:setColor(255, 255, 255, 0)
+	self.batch:set(x * self.height + y)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
