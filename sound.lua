@@ -22,6 +22,7 @@ function Sound:playMusic(musicName, volume)
 		self:stopMusic("all")
 		m:setVolume(volume)
 		m:play()
+    m:setLooping(true)
   else
     print("No such music file")
 	end
