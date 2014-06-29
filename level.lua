@@ -2,7 +2,7 @@ require('particle')
 
 class "Level" {
   width = 10;
-  height = 17;
+  height = 16;
   shipHitPerSec = 0.667;
   shotHit = 0.2;
   particles = {};
@@ -134,7 +134,7 @@ function Level:draw()
   local width = gScreenWidth
   local height = gScreenHeight
   local offsetx = width / 2 - self.width/2 * self.tileWidth
-  local offsety = 0
+  local offsety = height - self.height * self.tileHeight
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.plx, self.quad)
 	G.draw(self.bg, offsetx, offsety)
