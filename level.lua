@@ -55,11 +55,11 @@ function Level:setup()
   -- level blocks
   self.quad = G.newQuad(0, 0, self.tileWidth, self.tileHeight, 192, 192)
   self.img = G.newImage("gfx/blocks.png")
-  self.batch = G.newSpriteBatch(self.img, 171)
+  self.batch = G.newSpriteBatch(self.img, (self.width+1) * (self.height+1))
   self.batch:setColor(255, 255, 255, 0)
 
   self.batch:bind()
-  for x = 1, self.width do
+  for x = 1, self.width + 1 do
     self.level[x] = {}
     for y = 1, self.height do
       self.level[x][y] = 0 --math.random(0, 1)
