@@ -5,14 +5,15 @@ class "Particle" {
   maxLifetime = 0.5;
 }
 
-function Particle:__init(x, y)
+function Particle:__init(x, y, r, g, b, lifetime)
   self.posx = x
   self.posy = y
+  self.maxLifetime = lifetime
   local id = love.image.newImageData(32, 32)
   for x = 0, 31 do
     for y = 0, 31 do
       local gradient = 1 - ((x-15)^2+(y-15)^2)/40
-      id:setPixel(x, y, 255, 255, 255, 255*(gradient<0 and 0 or gradient))
+      id:setPixel(x, y, r, g, b, 255*(gradient<0 and 0 or gradient))
     end
   end
   
@@ -22,7 +23,11 @@ function Particle:__init(x, y)
   self.p:setEmissionRate          (20)
   self.p:setParticleLifetime      (4)
   self.p:setPosition              (0, 0)
-  self.p:setDirection             (1.7)
+  if lifetime < 1.0 then
+    self.p:setDirection             (1.7)
+  else
+    self.p:setDirection             (4.8)
+  end
   self.p:setSpread                (2)
   self.p:setSpeed                 (10, 30)
   self.p:setRadialAcceleration    (10)

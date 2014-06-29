@@ -6,7 +6,9 @@ class "Level" {
   shipHitPerSec = 0.667;
   shotHit = 0.2;
   particles = {};
+  rowParticles = {};
   particleSystemCount = 15;
+  rowParticleSystemCount = 20;
   points = 0;
   par = nil;
 }
@@ -15,7 +17,10 @@ function Level:__init(tileWidth, tileHeight)
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
   for i = 1, self.particleSystemCount do
-    self.particles[i] = Particle:new(50, 50)
+    self.particles[i] = Particle:new(50, 50, 255, 255, 255, 0.5)
+  end
+  for i = 1, self.rowParticleSystemCount do
+    self.rowParticles[i] = Particle:new(50, 50, 255, 255, 128, 1.5)
   end
   self:reset()
   self:setup()
@@ -33,6 +38,10 @@ function Level:reset()
   for i = 1, self.particleSystemCount do
     self.particles[i]:reset()
     self.particles[i]:stop()
+  end
+  for i = 1, self.rowParticleSystemCount do
+    self.rowParticles[i]:reset()
+    self.rowParticles[i]:stop()
   end
 end
 
@@ -210,6 +219,9 @@ function Level:draw()
   for i = 1, self.particleSystemCount do
     self.particles[i]:draw()
   end
+  for i = 1, self.rowParticleSystemCount do
+    self.rowParticles[i]:draw()
+  end
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -229,7 +241,7 @@ function Level:checkRowComplete()
   for y = 1, self.height do
     local rowComplete = true
     for x = 1, self.width do
-      if self.level[x][y] == 0 then
+      if math.ceil(self.level[x][y]) == 0 then
         rowComplete = false
       end
     end
@@ -242,6 +254,16 @@ function Level:checkRowComplete()
       end
       for x = 1, self.width do
         self.level[x][1] = 0
+        if (x + y) % 4 == 0 then
+          for i = 1, self.rowParticleSystemCount do
+            if not self.rowParticles[i]:isActive() then
+              local offsetx = gScreenWidth / 2 - self.width/2 * self.tileWidth
+              self.rowParticles[i]:setPosition(x * self.tileWidth + offsetx, (y - 0.5) * self.tileHeight)
+              self.rowParticles[i]:reset()
+              break
+            end
+          end
+        end
       end
     end
   end
@@ -264,6 +286,9 @@ function Level:update(dt)
   self.world:update(dt)
   for i = 1, self.particleSystemCount do
     self.particles[i]:update(dt)
+  end
+  for i = 1, self.rowParticleSystemCount do
+    self.rowParticles[i]:update(dt)
   end
 
   if self.stone == nil then
