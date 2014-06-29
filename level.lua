@@ -214,7 +214,7 @@ function Level:draw()
   
   love.graphics.setColor(255, 0, 255, 255)
   love.graphics.print("Points: " .. self.points, 10, 500)
-  love.graphics.print("Level: " .. math.floor(1 + self.points / 10000), 10, 600)
+  love.graphics.print("Level: " .. math.floor(1 + math.sqrt(self.points) / 100), 10, 600)
   
   for i = 1, self.particleSystemCount do
     self.particles[i]:draw()
@@ -292,8 +292,8 @@ function Level:update(dt)
   end
 
   if self.stone == nil then
-    local factor = 1 + self.points / 10000
-    self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height, 1.0 * factor, 7.5 * factor)
+    local factor = 1 + math.sqrt(self.points) / 100
+    self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height, 1.75 / factor, 7.5 / factor)
     if not self:checkNotBlocked() then
       self.gameLost = true
     else
