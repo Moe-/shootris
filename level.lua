@@ -138,6 +138,7 @@ function Level:draw()
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.plx, self.quad)
 	G.draw(self.bg, offsetx, offsety)
+  self.batch:bind()
   for y = 1, self.height do
     for x = 1, self.width do
       local drawx = offsetx + (x-1) * self.tileWidth
@@ -151,8 +152,24 @@ function Level:draw()
         love.graphics.setColor(0, 0, 255, 255)
 		love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
       end
+	  
+		--update physics
+		if self.level[x][y] == 0 then
+			self.physics[x][y].body:setActive(false)
+			self.batch:setColor(255, 255, 255, 0)
+		else
+			local stone_id = math.ceil(self.level[x][y])
+			self.physics[x][y].body:setActive(true)
+			self.batch:setColor(255, 255, 255, 255)
+			self.quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
+		end
+
+		--update graphics
+		self.batch:set(x * self.height + y, self.quad, (x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
+  
     end
   end
+  self.batch:unbind()
   
   if self.stone ~= nil then
     self.stone:draw(offsetx, offsety)
@@ -268,20 +285,6 @@ function Level:update(dt)
             if self.stone:getBlock(x, y) > 0 and self.level[posx + x][posy + y - 1] == 0 then
               self.level[posx + x][posy + y - 1] = self.stone:getBlock(x, y)
             end
-
-			--update physics
-			if self.level[posx + x][posy + y - 1] == 0 then
-				self.physics[posx + x][posy + y - 1].body:setActive(false)
-				self.batch:setColor(255, 255, 255, 0)
-			else
-				local stone_id = math.ceil(self.level[posx + x][posy + y - 1])
-				self.physics[posx + x][posy + y - 1].body:setActive(true)
-				self.batch:setColor(255, 255, 255, 255)
-				self.quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
-			end
-
-			--update graphics
-			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
           end
         end
         self.stone = nil
@@ -435,9 +438,6 @@ function Level:sitOnStone(x, y, dt)
   local hit = dt * self.shipHitPerSec
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
-    self.physics[x][y].body:setActive(false)
-    self.batch:setColor(255, 255, 255, 0)
-    self.batch:set(x * self.height + y)
     gSound:playSound("cube_hit_d4", 100, gScreenWidth/2, gScreenHeight, 0)
     self.points = self.points + 100
   else
@@ -465,13 +465,8 @@ function Level:shoot(x, y)
   local hit = factor * self.shotHit
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
-    self.physics[x][y].body:setActive(false)
     gSound:playSound("cube_hit_d3", 100, gScreenWidth/2, gScreenHeight, 0)
     self.points = self.points + 200
-
-	--update graphics
-	self.batch:setColor(255, 255, 255, 0)
-	self.batch:set(x * self.height + y, self.quad, (x) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
