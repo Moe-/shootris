@@ -31,10 +31,15 @@ function love.update(dt)
 end
 
 function love.draw()
+love.postshader.setBuffer("render")
   love.graphics.push()
   love.graphics.scale(gScaleX, gScaleY)
 	game:draw()
   love.graphics.pop()
+	love.postshader.addEffect("chromatic", 0, 0, 0, 1, -1, 0)
+	love.postshader.addEffect("scanlines")
+	love.postshader.addEffect("bloom")
+	love.postshader.draw()
 end
 
 function love.keypressed(key, unicode)
