@@ -19,14 +19,21 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
   self.height = self.maxSize
   self.fieldWidth = fieldWidth
   self.fieldHeight = fieldHeight
+  self.quad = G.newQuad(0, 0, tileWidth, tileHeight, 192, 192)
+  self.img = G.newImage("gfx/blocks.png")
+  self.batch = G.newSpriteBatch(self.img, self.width * self.height)
+  self.batch:setColor(255, 255, 255, 0)
 
+  self.batch:bind()
   self.stones = {}
   for x = 1, self.width do
     self.stones[x] = {}
     for y = 1, self.height do
       self.stones[x][y] = math.random(0, 1)
+	  self.batch:add(self.quad, 0, 0)
     end
   end
+  self.batch:unbind()
 
   local stonetype = math.random(1,7)
   if stonetype == 1 then --T
@@ -82,20 +89,27 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
 end
 
 function Stone:draw(offsetx, offsety)
+  self.batch:bind()
   for y = 1, self.height do
     for x = 1, self.width do
       self.parent.move_physics[x][y].body:setPosition(offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
 	  if self.stones[x][y] == 0 then
         -- do nothing, it's empty
+		self.batch:setColor(255, 255, 255, 0)
       elseif math.ceil(self.stones[x][y]) == 1 then
         love.graphics.setColor(128, 0, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
-      elseif math.ceil(self.stones[x][y]) == 2 then
+        self.batch:setColor(255, 255, 255, 255)
+	  elseif math.ceil(self.stones[x][y]) == 2 then
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
-      end
+        self.batch:setColor(255, 255, 255, 255)
+	  end
+
+	  self.batch:set(y * self.width + x, self.quad, offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
     end
   end
+  self.batch:unbind()
 end
 
 function Stone:update(dt)
