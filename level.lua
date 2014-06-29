@@ -8,6 +8,7 @@ class "Level" {
   particles = {};
   particleSystemCount = 15;
   points = 0;
+  par = nil;
 }
 
 function Level:__init(tileWidth, tileHeight)
@@ -18,7 +19,7 @@ function Level:__init(tileWidth, tileHeight)
   end
   self:reset()
   self:setup()
-  
+  self.par = Parallax:new(10)
 end
 
 function Level:reset()
@@ -143,6 +144,7 @@ function Level:draw()
   local offsety = height - self.height * self.tileHeight
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.plx, self.quad)
+	self.par:draw()
 	G.draw(self.bg, offsetx, offsety)
   self.batch:bind()
   for y = 1, self.height do
@@ -374,17 +376,8 @@ function Level:update(dt)
       end
     end
   end
-  --self:sitOnStone(3, 15, dt)
-  --self:shoot(3, 15)
-  
-  for y = 1, self.height do
-    local string = ""
-    for x = 1, self.width do 
-      string = string .. self.level[x][y] .. " "
-    end
-    print(string)
-  end
-  print(" ")
+
+  self.par:update(dt)
 end
 
 function Level:checkNotBlocked()

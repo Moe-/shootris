@@ -71,16 +71,6 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
   end
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
-  
-  for y = 1, self.height do
-    for x = 1, self.width do
-	  if self.stones[x][y] == 0 then
-      self.parent.move_physics[x][y].body:setActive(false)
-	  else
-	    self.parent.move_physics[x][y].body:setActive(true)
-	  end
-    end
-  end
 
   self:updateSize()
 end
@@ -99,17 +89,20 @@ function Stone:draw(offsetx, offsety)
 	  if self.stones[x][y] == 0 then
         -- do nothing, it's empty
 		self.parent.stone_batch:setColor(255, 255, 255, 0)
+		self.parent.move_physics[x][y].body:setActive(false)
       elseif math.ceil(self.stones[x][y]) == 1 then
         love.graphics.setColor(128, 0, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
 		self.parent.stone_quad:setViewport(0, 0, self.tileWidth, self.tileHeight)
+		self.parent.move_physics[x][y].body:setActive(true)
 	  elseif math.ceil(self.stones[x][y]) >= 2 then
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
 		local stone_id = math.ceil(self.stones[x][y])
 		self.parent.stone_quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
+		self.parent.move_physics[x][y].body:setActive(true)
 	  end
 
 	  self.parent.stone_batch:set((y - 1) * self.width + (x - 1), self.parent.stone_quad, offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
@@ -316,7 +309,6 @@ function Stone:sitOnStone(x, y, dt)
   local hit = dt * self.shipHitPerSec
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
-    self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
     gSound:playSound("cube_hit_e3", 100, gScreenWidth/2, gScreenHeight, 0)
     self.parent.points = self.parent.points + 100
@@ -346,7 +338,6 @@ function Stone:shoot(x, y)
   
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
-    self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
     gSound:playSound("cube_hit_e2", 100, gScreenWidth/2, gScreenHeight, 0)
     self.parent.points = self.parent.points + 100
