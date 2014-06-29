@@ -10,6 +10,7 @@ class "Stone" {
   shotHit = 0.2;
   physics = {};
   particle = nil;
+  stonetype = 0;
 }
 
 function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fieldHeight)
@@ -29,38 +30,38 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
     end
   end
 
-  local stonetype = math.random(1,7)
-  if stonetype == 1 then --T
+  self.stonetype = math.random(1,7)
+  if self.stonetype == 1 then --T
     self.stones[2][2] = 2
     self.stones[3][1] = 2
     self.stones[3][2] = 2
     self.stones[3][3] = 2
-  elseif stonetype == 2 then --inverse L
+  elseif self.stonetype == 2 then --inverse L
     self.stones[2][3] = 3
     self.stones[3][1] = 3
     self.stones[3][2] = 3
     self.stones[3][3] = 3
-  elseif stonetype == 3 then --L
+  elseif self.stonetype == 3 then --L
     self.stones[2][1] = 4
     self.stones[3][1] = 4
     self.stones[3][2] = 4
     self.stones[3][3] = 4
-  elseif stonetype == 4 then--I
+  elseif self.stonetype == 4 then--I
     self.stones[3][1] = 5
     self.stones[3][2] = 5
     self.stones[3][3] = 5
     self.stones[3][4] = 5
-  elseif stonetype == 5 then--o
+  elseif self.stonetype == 5 then--o
     self.stones[2][2] = 6
     self.stones[2][3] = 6
     self.stones[3][2] = 6
     self.stones[3][3] = 6
-  elseif stonetype == 6 then--inverse z
+  elseif self.stonetype == 6 then--inverse z
     self.stones[2][3] = 7
     self.stones[3][2] = 7
     self.stones[3][3] = 7
     self.stones[4][2] = 7
-  elseif stonetype == 7 then--z
+  elseif self.stonetype == 7 then--z
     self.stones[2][2] = 8
     self.stones[3][2] = 8
     self.stones[3][3] = 8
@@ -105,7 +106,8 @@ function Stone:draw(offsetx, offsety)
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
-		self.parent.stone_quad:setViewport(0, self.tileHeight, self.tileWidth, self.tileHeight)
+		local stone_id = math.ceil(self.stones[x][y])
+		self.parent.stone_quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
 	  end
 
 	  self.parent.stone_batch:set((y - 1) * self.width + (x - 1), self.parent.stone_quad, offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight)
