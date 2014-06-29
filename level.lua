@@ -161,15 +161,15 @@ function Level:draw()
       local drawx = offsetx + (x-1) * self.tileWidth
       local drawy = offsety + (y-1) * self.tileHeight
       if self.level[x][y] == 0 then
-        love.graphics.setColor(0, 255, 0, 255)
+        --love.graphics.setColor(0, 255, 0, 255)
       elseif math.ceil(self.level[x][y]) == 1 then
-        love.graphics.setColor(255, 0, 0, 255)
-		love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
+        --love.graphics.setColor(255, 0, 0, 255)
+		--love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
       elseif math.ceil(self.level[x][y]) >= 2 then
-        love.graphics.setColor(0, 0, 255, 255)
-		love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
+        --love.graphics.setColor(0, 0, 255, 255)
+		--love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
       end
-	  
+
 		--update physics
 		if self.level[x][y] == 0 then
 			self.physics[x][y].body:setActive(false)
@@ -177,7 +177,7 @@ function Level:draw()
 		else
 			local stone_id = math.ceil(self.level[x][y])
 			self.physics[x][y].body:setActive(true)
-			self.batch:setColor(255, 255, 255, 255)
+			self.batch:setColor(255, 255, 255, 255 * (self.level[x][y] - math.ceil(self.level[x][y]) + 1))
 			self.quad:setViewport(((stone_id - 1) % 3) * self.tileWidth, math.floor((stone_id - 1) / 3) * self.tileHeight, self.tileWidth, self.tileHeight)
 		end
 
