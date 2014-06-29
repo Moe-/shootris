@@ -351,7 +351,11 @@ function Level:shoot(x, y)
   local hit = factor * self.shotHit
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
-    self.physics[x][y].body:setActive(false)
+	self.physics[x][y].body:setActive(false)
+
+	--update graphics
+	self.batch:setColor(255, 255, 255, 0)
+	self.batch:set(x * self.height + y, self.quad, (x) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
