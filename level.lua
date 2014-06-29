@@ -9,7 +9,6 @@ class "Level" {
   rowParticles = {};
   particleSystemCount = 15;
   rowParticleSystemCount = 20;
-  points = 0;
   par = nil;
 }
 
@@ -33,6 +32,7 @@ function Level:reset()
   self.shots = nil
   self.wall = {}
   self.lastVelocity = 0
+  self.points = 0
   self.gameLost = false
   self.shipLost = false
   for i = 1, self.particleSystemCount do
