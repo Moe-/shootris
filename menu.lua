@@ -31,7 +31,6 @@ end
 
 function Menu:draw()
 	G.setFont(self.font)
-	--love.postshader.setBuffer("render")
 
 	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.background, self.quad)
@@ -53,11 +52,6 @@ function Menu:draw()
 	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, 42)
 	G.setColor(0, 0, 0)
 	G.printf("Quit", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, "center")
-
-	--love.postshader.addEffect("chromatic", 0, 0, 0, 1, -1, 0)
-	--love.postshader.addEffect("scanlines")
-	--love.postshader.addEffect("bloom")
-	--love.postshader.draw()
 end
 
 function Menu:keyHit(key)

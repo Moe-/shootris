@@ -43,6 +43,10 @@ function Level:setup()
   self.stone_img = G.newImage("gfx/blocks.png")
   self.stone_batch = G.newSpriteBatch(self.stone_img, 16)
   self.stone_batch:setColor(255, 255, 255, 0)
+  self.bg = G.newImage("gfx/lvl_bg.png")
+	self.quad = G.newQuad(0, 0, gScreenWidth, gScreenHeight, 256, 256)
+	self.plx = G.newImage("gfx/space.png")
+	self.plx:setWrap("repeat", "repeat")
 
   self.stone_batch:bind()
   for x = 1, self.width do
@@ -130,6 +134,9 @@ function Level:draw()
   local height = gScreenHeight
   local offsetx = width / 2 - self.width/2 * self.tileWidth
   local offsety = 0
+	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
+	G.draw(self.plx, self.quad)
+	G.draw(self.bg, offsetx, offsety)
   for y = 1, self.height do
     for x = 1, self.width do
       local drawx = offsetx + (x-1) * self.tileWidth
@@ -141,7 +148,7 @@ function Level:draw()
       elseif math.ceil(self.level[x][y]) >= 2 then
         love.graphics.setColor(0, 0, 255, 255)
       end
-      love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
+      --love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
     end
   end
   
@@ -156,17 +163,17 @@ function Level:draw()
   
   if self.gameLost then
     love.graphics.setColor(0, 255, 0, 255)
-    love.graphics.print("The block player sucks.", 10, 200)
+    love.graphics.print("The block player sucks.", 64, 256)
   end
   
   if self.shipLost then
     love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.print("The ship player sucks.", 10, 300)
+    love.graphics.print("The ship player sucks.", 64, 288)
   end
   
   if self.gameLost or self.shipLost then
     love.graphics.setColor(255, 255, 0, 255)
-    love.graphics.print("Press enter to restart.", 10, 400)
+    love.graphics.print("Press enter to restart.", 64, 320)
   end
   
   for i = 1, self.particleSystemCount do
