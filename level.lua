@@ -1,4 +1,5 @@
 require('particle')
+require('upgrade')
 
 class "Level" {
   width = 10;
@@ -10,6 +11,7 @@ class "Level" {
   particleSystemCount = 15;
   rowParticleSystemCount = 20;
   par = nil;
+  upgrade = nil;
 }
 
 function Level:__init(tileWidth, tileHeight)
@@ -24,6 +26,7 @@ function Level:__init(tileWidth, tileHeight)
   self:reset()
   self:setup()
   self.par = Parallax:new(10)
+  self.upgrade = Upgrade:new(self)
 end
 
 function Level:reset()
@@ -222,6 +225,7 @@ function Level:draw()
   for i = 1, self.rowParticleSystemCount do
     self.rowParticles[i]:draw()
   end
+  self.upgrade:draw()
 end
 
 function Level:checkStoneCollision(offsetx, offsety)
@@ -401,8 +405,8 @@ function Level:update(dt)
       end
     end
   end
-
   self.par:update(dt)
+  self.upgrade:update(dt)
 end
 
 function Level:checkNotBlocked()

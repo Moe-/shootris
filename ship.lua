@@ -8,6 +8,8 @@ class "Ship" {
 	timer = 0;
 	dead = false;
 	boost = false;
+	hitStrength = 0.2; -- default value
+	movementSpeed = 20000;
 }
 
 function Ship:__init(parent)
@@ -31,7 +33,7 @@ function Ship:update(dt)
 	end
 
 	if love.keyboard.isDown("w") then
-		self.body:applyForce(0, -20000)
+		self.body:applyForce(0, -self.movementSpeed)
 		boost = true;
 	else
 		boost = false;

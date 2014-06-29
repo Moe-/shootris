@@ -7,7 +7,6 @@ class "Stone" {
   nextMove = 0;
   quickFall = false;
   shipHitPerSec = 0.667;
-  shotHit = 0.2;
   physics = {};
   particle = nil;
   stonetype = 0;
@@ -335,7 +334,7 @@ function Stone:shoot(x, y)
   if math.ceil(self.stones[x][y]) >= 2 then
     factor = 0.075
   end
-  local hit = factor * self.shotHit
+  local hit = factor * self.parent.ship.hitStrength
   
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
