@@ -27,7 +27,7 @@ function Parallax:update(dt)
 	if self.nextUpdate >= 0.001 then
 		for i = 1, self.starAmount do
 			if self.stars[i] then
-				if self.stars[i].y >=love.window.getWidth()+50 then
+				if self.stars[i].y >=gScreenWidth+50 then
 					self.stars[i] = Parallax:resetStar(self.stars[i])
 				else
 					self.stars[i] = {x = self.stars[i].x,y = self.stars[i].y+self.stars[i].speed,speed = self.stars[i].speed,graphic = self.stars[i].graphic}
@@ -41,5 +41,5 @@ function Parallax:update(dt)
 end
 
 function Parallax:resetStar(v)
-	return {x=math.random(10,love.window.getWidth()),y=-20,speed = math.random(8,20),graphic = math.random(1,5)}
+	return {x=math.random(10,gScreenWidth),y=-20,speed = math.random(8,20),graphic = math.random(1,5)}
 end

@@ -12,8 +12,8 @@ class "Ship" {
 
 function Ship:__init(parent)
 	self.parent = parent
-	self.x = G.getWidth() * 0.5
-	self.y = G.getHeight() - 256
+	self.x = gScreenWidth * 0.5
+	self.y = gScreenHeight - 256
 	self.body = love.physics.newBody(parent.world, self.x, self.y, "dynamic")
 	self.body:setFixedRotation(true)
 	self.shape = love.physics.newRectangleShape(64, 128)

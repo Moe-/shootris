@@ -19,7 +19,7 @@ function Menu:__init(parent)
 	self.parent = parent
 	self.cursor = 0
 	self.font = G.newFont(36)
-	self.quad = G.newQuad(0, 0, W.getWidth(), W.getHeight(), 256, 256)
+	self.quad = G.newQuad(0, 0, gScreenWidth, gScreenHeight, 256, 256)
 	self.background = G.newImage("gfx/space.png")
 	self.background:setWrap("repeat", "repeat")
 	self.par = Parallax:new(10)
@@ -33,26 +33,26 @@ function Menu:draw()
 	G.setFont(self.font)
 	love.postshader.setBuffer("render")
 
-	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, W.getWidth(), W.getHeight())
+	self.quad:setViewport(-T.getTime() * 5, -T.getTime() * 20, gScreenWidth, gScreenHeight)
 	G.draw(self.background, self.quad)
 	self.par:draw()
 	--MENU START
 	self:setColor(MENU_START)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 0, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 0, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Start", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 0, 256, "center")
+	G.printf("Start", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 0, 256, "center")
 
 	--MENU CREDITS
 	self:setColor(MENU_CREDITS)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 48, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 48, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Credits", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 48, 256, "center")
+	G.printf("Credits", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 48, 256, "center")
 
 	--MENU QUIT
 	self:setColor(MENU_QUIT)
-	G.rectangle("fill", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 96, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Quit", W.getWidth() * 0.5 - 128, W.getHeight() * 0.5 - 64 + 96, 256, "center")
+	G.printf("Quit", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, "center")
 
 	--love.postshader.addEffect("chromatic", 0, 0, 0, 1, -1, 0)
 	love.postshader.addEffect("scanlines")

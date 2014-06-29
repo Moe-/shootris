@@ -63,7 +63,7 @@ function Level:setup()
     self.level[x] = {}
     for y = 1, self.height do
       self.level[x][y] = 0 --math.random(0, 1)
-	  self.batch:add(self.quad, (x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
+	  self.batch:add(self.quad, (x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
     end
   end
   self.batch:unbind()
@@ -80,7 +80,7 @@ function Level:setup()
 		self.physics[x] = {}
 		for y = 1, self.height do
 			self.physics[x][y] = {}
-			self.physics[x][y].body = love.physics.newBody(self.world, W.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth + (x - 1) * self.tileWidth, (y - 1) * self.tileHeight, "static")
+			self.physics[x][y].body = love.physics.newBody(self.world, gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth + (x - 1) * self.tileWidth, (y - 1) * self.tileHeight, "static")
 			self.physics[x][y].shape = love.physics.newRectangleShape(self.tileWidth, self.tileHeight)
 			self.physics[x][y].fixture = love.physics.newFixture(self.physics[x][y].body, self.physics[x][y].shape, 1)
 			self.physics[x][y].body:setActive(false)
@@ -102,32 +102,32 @@ function Level:setup()
 
 	--Add left wall
 	self.wall[1] = {}
-	self.wall[1].body = love.physics.newBody(self.world, 328, W.getHeight() * 0.5, "static")
-	self.wall[1].shape = love.physics.newRectangleShape(16, W.getHeight())
+	self.wall[1].body = love.physics.newBody(self.world, 328, gScreenHeight * 0.5, "static")
+	self.wall[1].shape = love.physics.newRectangleShape(16, gScreenHeight)
 	self.wall[1].fixture = love.physics.newFixture(self.wall[1].body, self.wall[1].shape, 1)
 
 	--Add right wall
 	self.wall[2] = {}
-	self.wall[2].body = love.physics.newBody(self.world, W.getWidth() - 392, W.getHeight() * 0.5, "static")
-	self.wall[2].shape = love.physics.newRectangleShape(16, W.getHeight())
+	self.wall[2].body = love.physics.newBody(self.world, gScreenWidth - 392, gScreenHeight * 0.5, "static")
+	self.wall[2].shape = love.physics.newRectangleShape(16, gScreenHeight)
 	self.wall[2].fixture = love.physics.newFixture(self.wall[2].body, self.wall[2].shape, 1)
 
 	--Add bottom wall
 	self.wall[3] = {}
-	self.wall[3].body = love.physics.newBody(self.world, W.getWidth() * 0.5, W.getHeight(), "static")
-	self.wall[3].shape = love.physics.newRectangleShape(W.getWidth(), 16)
+	self.wall[3].body = love.physics.newBody(self.world, gScreenWidth * 0.5, gScreenHeight, "static")
+	self.wall[3].shape = love.physics.newRectangleShape(gScreenWidth, 16)
 	self.wall[3].fixture = love.physics.newFixture(self.wall[3].body, self.wall[3].shape, 1)
 
 	--Add top wall
 	self.wall[4] = {}
-	self.wall[4].body = love.physics.newBody(self.world, W.getWidth() * 0.5, -16, "static")
-	self.wall[4].shape = love.physics.newRectangleShape(W.getWidth(), 16)
+	self.wall[4].body = love.physics.newBody(self.world, gScreenWidth * 0.5, -16, "static")
+	self.wall[4].shape = love.physics.newRectangleShape(gScreenWidth, 16)
 	self.wall[4].fixture = love.physics.newFixture(self.wall[4].body, self.wall[4].shape, 1)
 end
 
 function Level:draw()
-  local width = love.graphics.getWidth()
-  local height = love.graphics.getHeight()
+  local width = gScreenWidth
+  local height = gScreenHeight
   local offsetx = width / 2 - self.width/2 * self.tileWidth
   local offsety = 0
   for y = 1, self.height do
@@ -208,13 +208,13 @@ function Level:checkRowComplete()
     end
   end
   if count == 1 then
-    gSound:playSound("row_clear_1", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("row_clear_1", 100, gScreenWidth/2, gScreenHeight, 0)
   elseif count == 2 then
-    gSound:playSound("row_clear_2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("row_clear_2", 100, gScreenWidth/2, gScreenHeight, 0)
   elseif count == 3 then
-    gSound:playSound("row_clear_3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("row_clear_3", 100, gScreenWidth/2, gScreenHeight, 0)
   elseif count == 4 then
-    gSound:playSound("row_clear_4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("row_clear_4", 100, gScreenWidth/2, gScreenHeight, 0)
   end
 end
 
@@ -229,7 +229,7 @@ function Level:update(dt)
     if not self:checkNotBlocked() then
       self.gameLost = true
     else
-      gSound:playSound("cube_appear", 100, love.graphics.getWidth()/2, 0, 0)
+      gSound:playSound("cube_appear", 100, gScreenWidth/2, 0, 0)
     end
   end
 
@@ -263,7 +263,7 @@ function Level:update(dt)
 			end
 
 			--update graphics
-			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
+			self.batch:set((posx + x) * self.height + (posy + y - 1), self.quad, (posx + x - 1) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (posy + y - 2) * self.tileHeight)
           end
         end
         self.stone = nil
@@ -279,7 +279,7 @@ function Level:update(dt)
   for i = 1, self.shots:getSize() do
     local px, py = self.shots:getShotCoords(i)
     
-    local posx = math.floor((px - love.graphics.getWidth()/2) / self.tileWidth + self.width/2) + 1
+    local posx = math.floor((px - gScreenWidth/2) / self.tileWidth + self.width/2) + 1
     local posy = math.floor(py / self.tileHeight)
     
     local shotHit = self:shoot(posx, posy)
@@ -305,15 +305,15 @@ function Level:update(dt)
       
       local sound = math.random(1, 15)
       if sound == 1 then
-        gSound:playSound("cube_hit_a2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+        gSound:playSound("cube_hit_a2", 100, gScreenWidth/2, gScreenHeight, 0)
       elseif sound == 2 then
-        gSound:playSound("cube_hit_a3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+        gSound:playSound("cube_hit_a3", 100, gScreenWidth/2, gScreenHeight, 0)
       elseif sound == 3 then
-        gSound:playSound("cube_hit_c3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+        gSound:playSound("cube_hit_c3", 100, gScreenWidth/2, gScreenHeight, 0)
       elseif sound == 4 then
-        gSound:playSound("cube_hit_c4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+        gSound:playSound("cube_hit_c4", 100, gScreenWidth/2, gScreenHeight, 0)
       elseif sound == 5 then
-        gSound:playSound("cube_hit_d2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+        gSound:playSound("cube_hit_d2", 100, gScreenWidth/2, gScreenHeight, 0)
       end 
       
       self.shots:removeShot(i)
@@ -327,7 +327,7 @@ function Level:update(dt)
   if self.ship ~= nil then
     local velocity = self.ship:getVelocityLength()
     local posx, posy = self.ship:getPosition()
-    posx = math.floor((posx - love.graphics.getWidth()/2) / self.tileWidth + self.width/2 + 0.5) + 1
+    posx = math.floor((posx - gScreenWidth/2) / self.tileWidth + self.width/2 + 0.5) + 1
     posy = math.ceil(posy / self.tileHeight) + 1
     
     if velocity == 0 and self.lastVelocity == 0 then
@@ -410,7 +410,7 @@ function Level:sitOnStone(x, y, dt)
     self.physics[x][y].body:setActive(false)
     self.batch:setColor(255, 255, 255, 0)
     self.batch:set(x * self.height + y)
-    gSound:playSound("cube_hit_d4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("cube_hit_d4", 100, gScreenWidth/2, gScreenHeight, 0)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
@@ -437,11 +437,11 @@ function Level:shoot(x, y)
   if math.ceil(self.level[x][y]) ~= math.ceil(self.level[x][y] - hit) then
     self.level[x][y] = 0
     self.physics[x][y].body:setActive(false)
-    gSound:playSound("cube_hit_d3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+    gSound:playSound("cube_hit_d3", 100, gScreenWidth/2, gScreenHeight, 0)
 
 	--update graphics
 	self.batch:setColor(255, 255, 255, 0)
-	self.batch:set(x * self.height + y, self.quad, (x) * self.tileWidth + G.getWidth() * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
+	self.batch:set(x * self.height + y, self.quad, (x) * self.tileWidth + gScreenWidth * 0.5 - self.width * 0.5 * self.tileWidth, (y - 1) * self.tileHeight)
   else
     self.level[x][y] = self.level[x][y] - hit
   end
