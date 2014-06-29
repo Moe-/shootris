@@ -36,35 +36,35 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
     self.stones[3][2] = 2
     self.stones[3][3] = 2
   elseif stonetype == 2 then --inverse L
-    self.stones[2][3] = 2
-    self.stones[3][1] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
+    self.stones[2][3] = 3
+    self.stones[3][1] = 3
+    self.stones[3][2] = 3
+    self.stones[3][3] = 3
   elseif stonetype == 3 then --L
-    self.stones[2][1] = 2
-    self.stones[3][1] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
+    self.stones[2][1] = 4
+    self.stones[3][1] = 4
+    self.stones[3][2] = 4
+    self.stones[3][3] = 4
   elseif stonetype == 4 then--I
-    self.stones[3][1] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
-    self.stones[3][4] = 2
+    self.stones[3][1] = 5
+    self.stones[3][2] = 5
+    self.stones[3][3] = 5
+    self.stones[3][4] = 5
   elseif stonetype == 5 then--o
-    self.stones[2][2] = 2
-    self.stones[2][3] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
+    self.stones[2][2] = 6
+    self.stones[2][3] = 6
+    self.stones[3][2] = 6
+    self.stones[3][3] = 6
   elseif stonetype == 6 then--inverse z
-    self.stones[2][3] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
-    self.stones[4][2] = 2
+    self.stones[2][3] = 7
+    self.stones[3][2] = 7
+    self.stones[3][3] = 7
+    self.stones[4][2] = 7
   elseif stonetype == 7 then--z
-    self.stones[2][2] = 2
-    self.stones[3][2] = 2
-    self.stones[3][3] = 2
-    self.stones[4][3] = 2
+    self.stones[2][2] = 8
+    self.stones[3][2] = 8
+    self.stones[3][3] = 8
+    self.stones[4][3] = 8
   end
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
@@ -101,7 +101,7 @@ function Stone:draw(offsetx, offsety)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
 		self.parent.stone_quad:setViewport(0, 0, self.tileWidth, self.tileHeight)
-	  elseif math.ceil(self.stones[x][y]) == 2 then
+	  elseif math.ceil(self.stones[x][y]) >= 2 then
         love.graphics.setColor(0, 128, 128, 128)
         love.graphics.rectangle("fill", offsetx + (self.posx + x - 1) * self.tileWidth, offsety + (self.posy + y - 1) * self.tileHeight, self.tileWidth, self.tileHeight)
         self.parent.stone_batch:setColor(255, 255, 255, 255)
@@ -331,7 +331,7 @@ function Stone:shoot(x, y)
   end
 
   local factor = 1
-  if math.ceil(self.stones[x][y]) == 2 then
+  if math.ceil(self.stones[x][y]) >= 2 then
     factor = 0.075
   end
   local hit = factor * self.shotHit

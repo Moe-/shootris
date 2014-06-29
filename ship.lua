@@ -6,6 +6,7 @@ class "Ship" {
 	x = 0;
 	y = 0;
 	timer = 0;
+	dead = false;
 }
 
 function Ship:__init(parent)
@@ -23,6 +24,10 @@ function Ship:__init(parent)
 end
 
 function Ship:update(dt)
+	if self.dead then
+		return
+	end
+
 	if love.keyboard.isDown("w") then
 		self.body:applyForce(0, -20000)
 	end
@@ -64,4 +69,8 @@ end
 function Ship:getVelocityLength()
 	local x, y = self:getVelocity()
 	return math.sqrt(x*x + y*y)
+end
+
+function Ship:kill()
+  self.dead = true
 end

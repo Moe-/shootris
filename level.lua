@@ -138,7 +138,7 @@ function Level:draw()
         love.graphics.setColor(0, 255, 0, 255)
       elseif math.ceil(self.level[x][y]) == 1 then
         love.graphics.setColor(255, 0, 0, 255)
-      elseif math.ceil(self.level[x][y]) == 2 then
+      elseif math.ceil(self.level[x][y]) >= 2 then
         love.graphics.setColor(0, 0, 255, 255)
       end
       love.graphics.rectangle("fill", drawx, drawy, self.tileWidth, self.tileHeight)
@@ -314,6 +314,7 @@ function Level:update(dt)
     if posx > 0 and posx < self.width then
       if (posy > self.height or self.level[posx][posy] > 0) and self.level[posx][posy - 1] > 0 then
         self.shipLost = true
+        self.ship:kill()
       end
     end
   end
@@ -400,7 +401,7 @@ function Level:shoot(x, y)
   end
 
   local factor = 1
-  if math.ceil(self.level[x][y]) == 2 then
+  if math.ceil(self.level[x][y]) >= 2 then
     factor = 0.075
   end
   local hit = factor * self.shotHit
