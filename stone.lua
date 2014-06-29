@@ -78,7 +78,7 @@ function Stone:__init(parent, posx, posy, tileWidth, tileHeight, fieldWidth, fie
   for y = 1, self.height do
     for x = 1, self.width do
 	  if self.stones[x][y] == 0 then
-        self.parent.move_physics[x][y].body:setActive(false)
+      self.parent.move_physics[x][y].body:setActive(false)
 	  else
 	    self.parent.move_physics[x][y].body:setActive(true)
 	  end
@@ -303,6 +303,7 @@ function Stone:sitOnStone(x, y, dt)
   local hit = dt * self.shipHitPerSec
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
+    self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
   else
     self.stones[x][y] = self.stones[x][y] - hit
@@ -330,6 +331,7 @@ function Stone:shoot(x, y)
   
   if math.ceil(self.stones[x][y]) ~= math.ceil(self.stones[x][y] - hit) then
     self.stones[x][y] = 0
+    self.parent.move_physics[x][y].body:setActive(false)
     self:updateSize()
   else
     self.stones[x][y] = self.stones[x][y] - hit

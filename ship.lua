@@ -37,3 +37,16 @@ function Ship:draw()
 	G.setColor(255, 255, 255)
 	G.rectangle("fill", self.x + 16, self.y + 16, 32, 32)
 end
+
+function Ship:getPosition()
+	return self.x, self.y
+end
+
+function Ship:getVelocity()
+	return self.body:getLinearVelocity()
+end
+
+function Ship:getVelocityLength()
+	local x, y = self:getVelocity()
+	return math.sqrt(x*x + y*y)
+end
