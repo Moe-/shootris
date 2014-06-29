@@ -18,6 +18,8 @@ class "Upgrade" {
 	rectPosY1 = 0;
 	rectPosX2 = 0;
 	rectPosY2 = 0;
+	weaponUpgradeImg = nil;
+	driveUpgradeImg = nil;
 }
 
 function Upgrade:__init(level)
@@ -28,6 +30,8 @@ function Upgrade:__init(level)
 	self.rectPosY1 = self.height - 128
 	self.rectPosX2 = self.width - 192
 	self.rectPosY2 = self.height - 128
+	self.weaponUpgradeImg = love.graphics.newImage("gfx/shot.png")
+	self.driveUpgradeImg = love.graphics.newImage("gfx/booster.png")
 end
 
 function Upgrade:draw()
@@ -43,6 +47,8 @@ function Upgrade:draw()
 		end
 	end
 	love.graphics.rectangle("fill",self.rectPosX1,self.rectPosY1,self.buttonSize,self.buttonSize)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.draw(self.weaponUpgradeImg,self.rectPosX1,self.rectPosY1)
 	-- button2
 		if self.parent.points <= self.currentDriveCosts then
 		love.graphics.setColor(180,100,100,255)
@@ -54,6 +60,8 @@ function Upgrade:draw()
 		end
 	end
 	love.graphics.rectangle("fill",self.rectPosX2,self.rectPosY2,self.buttonSize,self.buttonSize)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.draw(self.driveUpgradeImg,self.rectPosX2,self.rectPosY2)
 end
 
 function Upgrade:update(dt)
