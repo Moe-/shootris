@@ -34,21 +34,21 @@ function Menu:draw()
 	--self.par:draw()
 	--MENU START
 	self:setColor(MENU_START)
-	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 0, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 0, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Start", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 0, 256, "center")
+	G.printf("Start", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 0, 256, "center")
 
 	--MENU CREDITS
 	self:setColor(MENU_CREDITS)
-	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 48, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 48, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Credits", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 48, 256, "center")
+	G.printf("Credits", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 48, 256, "center")
 
 	--MENU QUIT
 	self:setColor(MENU_QUIT)
-	G.rectangle("fill", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, 42)
+	G.rectangle("fill", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 96, 256, 42)
 	G.setColor(0, 0, 0)
-	G.printf("Quit", gScreenWidth * 0.5 - 128, gScreenHeight * 0.5 - 64 + 96, 256, "center")
+	G.printf("Quit", gScreenWidth * 0.15 - 128, gScreenHeight * 0.5 - 64 + 96, 256, "center")
 end
 
 function Menu:keyHit(key)
