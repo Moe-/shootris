@@ -10,26 +10,32 @@ require('soundlist')
 class "Sound" {
 	parent = nil;
 }
+
+function Sound:__init()
+  self.soundlist = Soundlist:new()
+end
 --------------- background music
 -- music functions: play, pause, resume, stop, change volume
 function Sound:playMusic(musicName, volume)
-		local m = Soundlist:getMusic(musicName)
+		local m = self.soundlist:getMusic(musicName)
 	if m then
-		Sound:stopMusic("all")
+		self:stopMusic("all")
 		m:setVolume(volume)
 		m:play()
+  else
+    print("No such file")
 	end
 end
 
 function Sound:pauseMusic()
-	local m = Soundlist:getMusic(musicName)
+	local m = self.soundlist:getMusic(musicName)
 	if m then
 		m:pause()
 	end
 end
 
 function Sound:resumeMusic(musicName)
-	local m = Soundlist:getMusic(musicName)
+	local m = self.soundlist:getMusic(musicName)
 	if m then
 		m:resume()
 	end
@@ -37,11 +43,11 @@ end
 
 function Sound:stopMusic(musicName)
 	if musicName == "all" then
-		for _,v in ipairs(Soundlist.music) do
-			Sound:stopMusic(v)
+		for _,v in ipairs(self.soundlist:getMusicList()) do
+			self:stopMusic(v)
 		end
 	else
-		local m = Soundlist:getMusic(musicName)
+		local m = self.soundlist:getMusic(musicName)
 		if m then
 			m:stop()
 		end
@@ -49,7 +55,7 @@ function Sound:stopMusic(musicName)
 end
 
 function Sound:changeMusicVolume(musicName,newVolume)
-	local m = Soundlist:getMusic(musicName)
+	local m = self.soundlist:getMusic(musicName)
 	if m then
 		m:setVolume(newVolume)
 	end
@@ -57,7 +63,7 @@ end
 --------------- sound effects
 -- sound effect functions: play, pause(+all), resume, stop(+all)
 function Sound:playSound(sound, volume, xCoord, yCoord, zCoord)
-	local s = Soundlist:getSound(sound)
+	local s = self.soundlist:getSound(sound)
 	if s then
 		s:setVolume(volume)
 		s:setPosition(xCoord or 0,yCoord or 0,zCoord or 0)
@@ -66,14 +72,14 @@ function Sound:playSound(sound, volume, xCoord, yCoord, zCoord)
 end
 
 function Sound:pauseSound()
-	local m = Soundlist:getSound(soundName)
+	local m = self.soundlist:getSound(soundName)
 	if m then
 		m:pause()
 	end
 end
 
 function Sound:resumeSound(soundName)
-	local m = Soundlist:getSound(soundName)
+	local m = self.soundlist:getSound(soundName)
 	if m then
 		m:resume()
 	end
@@ -82,10 +88,10 @@ end
 function Sound:stopSound(soundName)
 	if soundName == "all" then
 		for _,v in ipairs(sList.soundEffects) do
-			Sound:stopSound(v)
+			self:stopSound(v)
 		end
 	else
-		local m = Soundlist:getSound(soundName)
+		local m = self.soundlist:getSound(soundName)
 		if m then
 			m:stop()
 		end
@@ -93,7 +99,7 @@ function Sound:stopSound(soundName)
 end
 
 function Sound:changeSoundVolume(soundName,newVolume)
-	local m = Soundlist:getSound(soundName)
+	local m = self.soundlist:getSound(soundName)
 	if m then
 		m:setVolume(newVolume)
 	end
