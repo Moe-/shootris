@@ -187,6 +187,7 @@ function Level:checkStoneCollision(offsetx, offsety)
 end
 
 function Level:checkRowComplete()
+  local count = 0
   for y = 1, self.height do
     local rowComplete = true
     for x = 1, self.width do
@@ -195,6 +196,7 @@ function Level:checkRowComplete()
       end
     end
     if rowComplete then
+      count = count + 1
       for y2 = y, 2, -1 do
         for x = 1, self.width do
           self.level[x][y2] = self.level[x][y2 - 1]
@@ -204,6 +206,15 @@ function Level:checkRowComplete()
         self.level[x][1] = 0
       end
     end
+  end
+  if count == 1 then
+    gSound:playSound("row_clear_1", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+  elseif count == 2 then
+    gSound:playSound("row_clear_2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+  elseif count == 3 then
+    gSound:playSound("row_clear_3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+  elseif count == 4 then
+    gSound:playSound("row_clear_4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
   end
 end
 
@@ -217,6 +228,8 @@ function Level:update(dt)
     self.stone = Stone:new(self, self.width/2 - 2, 0, self.tileWidth, self.tileHeight, self.width, self.height)
     if not self:checkNotBlocked() then
       self.gameLost = true
+    else
+      gSound:playSound("cube_appear", 100, love.graphics.getWidth()/2, 0, 0)
     end
   end
 
@@ -288,7 +301,28 @@ function Level:update(dt)
           end
           break
         end
-    end
+      end
+      
+      local sound = math.random(1, 9)
+      if sound == 1 then
+        gSound:playSound("cube_hit_a2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 2 then
+        gSound:playSound("cube_hit_a3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 3 then
+        gSound:playSound("cube_hit_c3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 4 then
+        gSound:playSound("cube_hit_c4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 5 then
+        gSound:playSound("cube_hit_d2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 6 then
+        gSound:playSound("cube_hit_d3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 7 then
+        gSound:playSound("cube_hit_d4", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 8 then
+        gSound:playSound("cube_hit_e2", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      elseif sound == 9 then
+        gSound:playSound("cube_hit_e3", 100, love.graphics.getWidth()/2, love.graphics.getHeight(), 0)
+      end 
       
       self.shots:removeShot(i)
     end

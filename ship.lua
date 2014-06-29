@@ -44,6 +44,7 @@ function Ship:update(dt)
 	if love.keyboard.isDown(" ") then
 		if self.timer + 0.2 < T.getTime() then
 			self.parent.shots:add(self.x + 32, self.y)
+      gSound:playSound("ship_weapon_fire", 100, self.x, self.y, 0)
 			self.timer = T.getTime()
 		end
 	end
