@@ -1,7 +1,7 @@
 class "Stone" {
   parent = nil;
   maxSize = 4;
-  moveTime = 0.25;
+  moveTime = 0.125;
   fallTime = 0.5;
   nextFall = 5.0;
   nextMove = 0;
