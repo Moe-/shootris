@@ -6,7 +6,7 @@ class "Stone" {
   nextFall = 0.5;
   nextMove = 0;
   quickFall = false;
-  shipHitPerSec = 0.33;
+  shipHitPerSec = 0.667;
   shotHit = 0.2;
   physics = {};
 }
@@ -313,15 +313,15 @@ end
 
 function Stone:shoot(x, y)
   if x < 1 or x > self.width then
-    return
+    return false
   end
   
   if y < 1 or y > self.height then
-    return
+    return false
   end
   
   if self.stones[x][y] == 0 then
-    return
+    return false
   end
 
   local factor = 1
@@ -337,4 +337,5 @@ function Stone:shoot(x, y)
   else
     self.stones[x][y] = self.stones[x][y] - hit
   end
+  return true
 end
